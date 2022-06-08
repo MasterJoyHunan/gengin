@@ -17,4 +17,16 @@ var (
 
 	//go:embed types.tpl
 	TypesTemplate string
+
+	//go:embed logic.tpl
+	LogicTemplate string
+
+	//go:embed routes.tpl
+	RoutesTemplate string
+
+	//go:embed routes_setup.tpl
+	RoutesSetupTemplate string
+
+	//go:embed handler.tpl
+	HandlerTemplate string
 )

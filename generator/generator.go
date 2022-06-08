@@ -2,14 +2,15 @@ package generator
 
 import (
 	"bytes"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/tools/goctl/util/format"
-	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 	goformat "go/format"
 	"strings"
 	"text/template"
 
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
 	"github.com/zeromicro/go-zero/tools/goctl/api/util"
+	"github.com/zeromicro/go-zero/tools/goctl/util/format"
+	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
 type (
@@ -22,10 +23,10 @@ type (
 		data            interface{}
 	}
 
-	GroupInfo struct {
-		GroupName string
-		DirPath   string
-		PkgName   string
+	groupBase struct {
+		groupName string
+		dirPath   string
+		pkgName   string
 	}
 )
 
@@ -64,18 +65,48 @@ func formatCode(code string) string {
 }
 
 // parseGroupName 解析 Group 所属的 subDir 和 pkgName
-func parseGroupName(groupName, defaultDir, defaultPkgName string) (i GroupInfo) {
+func parseGroupName(groupName, defaultDir, defaultPkgName string) (i groupBase) {
 	if groupName == "" {
-		i.GroupName = ""
-		i.DirPath = defaultDir
-		i.PkgName = defaultPkgName
+		i.groupName = ""
+		i.dirPath = defaultDir
+		i.pkgName = defaultPkgName
 		return
 	}
 	fmtName, err := format.FileNamingFormat(dirFmt, groupName)
 	logx.Must(err)
 
-	i.GroupName = groupName
-	i.DirPath = pathx.JoinPackages(defaultDir, fmtName)
-	i.PkgName = fmtName[strings.LastIndex(fmtName, "/")+1:]
+	i.groupName = groupName
+	i.dirPath = pathx.JoinPackages(defaultDir, fmtName)
+	i.pkgName = fmtName[strings.LastIndex(fmtName, "/")+1:]
 	return
+}
+
+func getHandlerBaseName(route spec.Route) string {
+	handler := route.Handler
+	handler = strings.TrimSpace(handler)
+	handler = strings.TrimSuffix(handler, "handler")
+	handler = strings.TrimSuffix(handler, "Handler")
+	return handler
+}
+
+func getLogicName(route spec.Route) string {
+	return getHandlerBaseName(route) + "Logic"
+}
+
+func getHandlerName(route spec.Route) string {
+	return getHandlerBaseName(route) + "Handle"
+}
+
+func getTypesImportAlias(pkg groupBase) string {
+	if pkg.dirPath == typesPacket {
+		return ""
+	}
+	return pkg.pkgName + typePkgAlias + " "
+}
+
+func getTypesUseAlias(pkg groupBase) string {
+	if pkg.dirPath == typesPacket {
+		return typesPacket + "."
+	}
+	return pkg.pkgName + typePkgAlias + "."
 }

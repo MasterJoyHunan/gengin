@@ -28,7 +28,7 @@ const (
 
 	typePkgAlias = "Type"
 
-	groupProperty = "group"
+	groupProperty = "groupInfo"
 
 	dirFmt = "go/zero"
 )

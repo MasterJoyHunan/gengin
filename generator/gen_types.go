@@ -32,17 +32,17 @@ func GenTypes() error {
 
 	for _, t := range types {
 		typeGroupInfo := parseGroupName(t.GroupName, typesDir, typesPacket)
-		filename := pathx.JoinPackages(PluginInfo.Dir, typeGroupInfo.DirPath, typeFilename)
+		filename := pathx.JoinPackages(PluginInfo.Dir, typeGroupInfo.dirPath, typeFilename)
 		os.Remove(filename)
 
 		err = genFile(fileGenConfig{
 			dir:             PluginInfo.Dir,
-			subDir:          typeGroupInfo.DirPath,
+			subDir:          typeGroupInfo.dirPath,
 			filename:        typeFilename,
 			templateName:    "typesTemplate",
 			builtinTemplate: tpl.TypesTemplate,
 			data: map[string]interface{}{
-				"pkgName": typeGroupInfo.PkgName,
+				"pkgName": typeGroupInfo.pkgName,
 				"types":   t.TypeStr,
 			},
 		})
@@ -73,7 +73,7 @@ func buildTypes(types []spec.Type) (string, error) {
 
 // buildGroupTypes gen types to string
 func buildGroupTypes() ([]TypeBelongGroup, error) {
-	// 用于保存 type 被哪几个 group 用到
+	// 用于保存 type 被哪几个 groupInfo 用到
 	container := make(map[string]map[string]int, 0)
 	for _, group := range PluginInfo.Api.Service.Groups {
 		for _, route := range group.Routes {
@@ -82,15 +82,13 @@ func buildGroupTypes() ([]TypeBelongGroup, error) {
 		}
 	}
 
-	// 用于保存 group 下包含几个 type， 如果一个 type 被多个 group 用到了，则放入公共的 type 文件中
-	// 如果一个 type 没有设定 group ，则也会放到 公共的 type 文件中
+	// 用于保存 groupInfo 下包含几个 type， 如果一个 type 被多个 groupInfo 用到了，则放入公共的 type 文件中
+	// 如果一个 type 没有设定 groupInfo ，则也会放到 公共的 type 文件中
 	groupType := make(map[string]map[string]int)
 	for typeName, groups := range container {
-		_, ok := groups[commonGroup]
+		_, ok := groups[""]
 		groupName := ""
-		if ok || len(groups) >= 2 {
-			groupName = commonGroup
-		} else {
+		if !ok && len(groups) == 1 {
 			for group := range groups {
 				groupName = group
 			}
@@ -122,13 +120,9 @@ func buildGroupTypes() ([]TypeBelongGroup, error) {
 		})
 	}
 
-	// TODO
+	// 每个 type 对应的 groupInfo
 	for _, g := range groupTypes {
 		for _, s := range g.TypeMap {
-			if g.GroupName == commonGroup {
-				typeGroup[s.Name()] = ""
-				continue
-			}
 			typeGroup[s.Name()] = g.GroupName
 		}
 	}
@@ -139,9 +133,6 @@ func buildGroupTypes() ([]TypeBelongGroup, error) {
 func joinContainer(container map[string]map[string]int, typeName string, group string) {
 	if typeName == "" {
 		return
-	}
-	if group == "" {
-		group = commonGroup
 	}
 	_, ok := container[typeName]
 	if !ok {
@@ -191,16 +182,16 @@ func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type) er
 }
 
 //
-//func getTypesImportAlias(pkg GroupInfo) string {
-//	if pkg.DirPath == typesPacket {
+//func getTypesImportAlias(pkg groupBase) string {
+//	if pkg.dirPath == typesPacket {
 //		return ""
 //	}
-//	return pkg.PkgName + typePkgAlias + " "
+//	return pkg.pkgName + typePkgAlias + " "
 //}
 //
-//func getTypesUseAlias(pkg GroupInfo) string {
-//	if pkg.DirPath == typesPacket {
+//func getTypesUseAlias(pkg groupBase) string {
+//	if pkg.dirPath == typesPacket {
 //		return typesPacket + "."
 //	}
-//	return pkg.PkgName + typePkgAlias + "."
+//	return pkg.pkgName + typePkgAlias + "."
 //}

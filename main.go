@@ -12,6 +12,10 @@ func main() {
 	Must(generator.GenMain())
 	Must(generator.GenMiddleware())
 	Must(generator.GenTypes())
+	Must(generator.GenLogic())
+	Must(generator.GenRoutes())
+	Must(generator.GenHandlers())
+
 }
 
 func Must(err error) {
