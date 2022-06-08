@@ -140,9 +140,9 @@ func genSetup(groups []groupInfo) error {
 	for _, g := range groups {
 		if g.dirPath != routesDir {
 			importArr = append(importArr, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, g.dirPath)))
-			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.pkgName, strings.Title(g.groupName)))
+			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.pkgName, title.String(g.groupName)))
 		} else {
-			regArr = append(regArr, fmt.Sprintf("Register%sRoute(e)", strings.Title(g.groupName)))
+			regArr = append(regArr, fmt.Sprintf("Register%sRoute(e)", title.String(g.groupName)))
 		}
 	}
 
@@ -158,7 +158,7 @@ func genSetup(groups []groupInfo) error {
 		builtinTemplate: tpl.RoutesSetupTemplate,
 		data: map[string]interface{}{
 			"importPackages": importStr,
-			"Register":       regStr,
+			"register":       regStr,
 		},
 	})
 }

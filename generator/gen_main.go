@@ -12,6 +12,8 @@ import (
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
 )
 
+const ginEngineName = "e"
+
 func GenMain() error {
 	filename, err := format.FileNamingFormat(PluginInfo.Style, PluginInfo.Api.Service.Name)
 	if err != nil {
@@ -29,12 +31,13 @@ func GenMain() error {
 		templateName:    "mainTemplate",
 		builtinTemplate: tpl.MainTemplate,
 		data: map[string]interface{}{
-			"importPkg":  genMainImportPkg(),
-			"etcDir":     etcDir,
-			"configName": filename,
-			"setup":      genMainSetup(),
-			"host":       defaultHost,
-			"port":       defaultPort,
+			"importPkg":     genMainImportPkg(),
+			"etcDir":        etcDir,
+			"configName":    filename,
+			"setup":         genMainSetup(),
+			"host":          defaultHost,
+			"port":          defaultPort,
+			"ginEngineName": ginEngineName,
 		},
 	})
 }
@@ -55,6 +58,6 @@ func genMainImportPkg() string {
 
 func genMainSetup() string {
 	return fmt.Sprintf(`
-		%s.Setup()
-`, routesPacket)
+		%s.Setup(%s)
+`, routesPacket, ginEngineName)
 }

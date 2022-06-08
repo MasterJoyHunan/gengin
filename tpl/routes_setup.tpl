@@ -8,5 +8,5 @@ import (
 )
 
 func Setup(e *gin.Engine) {
-    {{.Register}}
+    {{.register}}
 }

@@ -20,7 +20,7 @@ func main() {
 
 	// configFile := fmt.Sprintf("{{.etcDir}}/{{.configName}}-%s.yaml", release)
 
-    route := gin.Default()
+    {{.ginEngineName}} := gin.Default()
 
 	{{.setup}}
 
