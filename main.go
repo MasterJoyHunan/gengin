@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/MasterJoyHunan/go-zero-gin-plugin/generator"
-	"github.com/MasterJoyHunan/go-zero-gin-plugin/prepare"
+	"github.com/MasterJoyHunan/gengin/generator"
+	"github.com/MasterJoyHunan/gengin/prepare"
 )
 
 func main() {

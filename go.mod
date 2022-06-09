@@ -1,4 +1,4 @@
-module github.com/MasterJoyHunan/go-zero-gin-plugin
+module github.com/MasterJoyHunan/gengin
 
 go 1.18
 

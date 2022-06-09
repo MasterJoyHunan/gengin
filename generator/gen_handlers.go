@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/MasterJoyHunan/go-zero-gin-plugin/pkg"
-	. "github.com/MasterJoyHunan/go-zero-gin-plugin/prepare"
-	"github.com/MasterJoyHunan/go-zero-gin-plugin/tpl"
+	"github.com/MasterJoyHunan/gengin/pkg"
+	. "github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/tpl"
 
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
 	"github.com/zeromicro/go-zero/tools/goctl/util"
