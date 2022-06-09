@@ -1,0 +1,14 @@
+syntax = "v1"
+
+@server(
+    group: swagger
+)
+
+
+service someapp {
+    @handler swagger
+    get /swagger
+
+    @handler json
+    get /json
+}

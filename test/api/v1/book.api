@@ -1,0 +1,36 @@
+syntax = "v1"
+
+type bookRequest {
+    Name string `json:"name"` // 姓名
+    Age int `json:"age"`      // 年龄
+}
+
+type bookResponse {
+    Code int `json:"code"` // 业务码
+    Msg string `json:"msg"` // 业务消息
+}
+
+@server(
+    jwt: Auth
+    group: book
+    middleware: SomeMiddleware,CorsMiddleware
+    prefix: /v1
+)
+
+service someapp {
+    @doc "获取所有书本信息"
+    @handler getBookList
+    get /book (bookRequest) returns (bookResponse)
+
+    @doc "获取书本信息"
+    @handler getBook
+    get /book/:id (bookRequest) returns (bookResponse)
+
+    @doc "添加书本信息"
+    @handler addBook
+    post /book (bookRequest) returns (bookResponse)
+
+    @doc "获取书本信息"
+    @handler editBook
+    put /book/:id (bookRequest) returns (bookResponse)
+}

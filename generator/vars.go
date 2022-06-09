@@ -1,10 +1,5 @@
 package generator
 
-import (
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-)
-
 const (
 	etcDir = "etc"
 
@@ -28,9 +23,7 @@ const (
 
 	typePkgAlias = "Type"
 
-	groupProperty = "groupInfo"
+	groupProperty = "group"
 
 	dirFmt = "go/zero"
 )
-
-var title = cases.Title(language.English)

@@ -10,6 +10,7 @@ import (
 	"github.com/MasterJoyHunan/gengin/tpl"
 
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
+	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
@@ -23,7 +24,7 @@ type TypeBelongGroup struct {
 }
 
 func GenTypes() error {
-	types, err := buildGroupTypes()
+	types, err := BuildGroupTypes()
 	if err != nil {
 		return err
 	}
@@ -71,8 +72,8 @@ func buildTypes(types []spec.Type) (string, error) {
 	return builder.String(), nil
 }
 
-// buildGroupTypes gen types to string
-func buildGroupTypes() ([]TypeBelongGroup, error) {
+// BuildGroupTypes gen types to string
+func BuildGroupTypes() ([]TypeBelongGroup, error) {
 	// 用于保存 type 被哪几个 groupInfo 用到
 	container := make(map[string]map[string]int, 0)
 	for _, group := range PluginInfo.Api.Service.Groups {
@@ -147,10 +148,10 @@ func writeType(writer io.Writer, tp spec.Type) error {
 		return fmt.Errorf("unspport struct type: %s", tp.Name())
 	}
 
-	fmt.Fprintf(writer, "type %s struct {\n", title.String(tp.Name()))
+	fmt.Fprintf(writer, "type %s struct {\n", util.Title(tp.Name()))
 	for _, member := range structType.Members {
 		if member.IsInline {
-			if _, err := fmt.Fprintf(writer, "%s\n", title.String(member.Type.Name())); err != nil {
+			if _, err := fmt.Fprintf(writer, "%s\n", util.Title(member.Type.Name())); err != nil {
 				return err
 			}
 
@@ -174,9 +175,9 @@ func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type) er
 	if len(comment) > 0 {
 		comment = strings.TrimPrefix(comment, "//")
 		comment = "//" + comment
-		_, err = fmt.Fprintf(writer, "%s %s %s %s\n", title.String(name), tp.Name(), tag, comment)
+		_, err = fmt.Fprintf(writer, "%s %s %s %s\n", util.Title(name), tp.Name(), tag, comment)
 	} else {
-		_, err = fmt.Fprintf(writer, "%s %s %s\n", title.String(name), tp.Name(), tag)
+		_, err = fmt.Fprintf(writer, "%s %s %s\n", util.Title(name), tp.Name(), tag)
 	}
 	return err
 }

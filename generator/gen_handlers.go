@@ -28,7 +28,7 @@ func GenHandlers() error {
 func genHandler(group spec.Group, route spec.Route) error {
 	handler := getHandlerName(route)
 	logicGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), logicDir, logicPacket)
-	handlerGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), handlerDir, logicPacket)
+	handlerGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), handlerDir, handlerPacket)
 
 	// 解析请求
 	p := new(pkg.ParseRequestBody)
@@ -56,9 +56,9 @@ func genHandler(group spec.Group, route spec.Route) error {
 		data: map[string]interface{}{
 			"pkgName":        handlerGroupNameParse.pkgName,
 			"importPackages": genHandlerImports(group, route),
-			"handlerName":    title.String(handler),
+			"handlerName":    util.Title(handler),
 			"requestType":    alias + util.Title(route.RequestTypeName()),
-			"logicCall":      logicGroupNameParse.pkgName + "." + title.String(strings.TrimSuffix(logic, "Logic")),
+			"logicCall":      logicGroupNameParse.pkgName + "." + util.Title(strings.TrimSuffix(logic, "Logic")),
 			"hasResp":        len(route.ResponseTypeName()) > 0,
 			"hasRequest":     len(route.RequestTypeName()) > 0,
 			"parseRequest":   parseRequest,

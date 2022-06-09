@@ -12,6 +12,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/collection"
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
+	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
@@ -63,7 +64,7 @@ func GenRoutes() error {
 				"hasPrefix":       len(g.prefix) > 0,
 				"hasMiddleware":   len(g.middlewares) > 0,
 				"middleware":      strings.Join(g.middlewares, ", "),
-				"function":        title.String(g.groupName),
+				"function":        util.Title(g.groupName),
 				"importPackages":  genGinRouteImports(g),
 				"routesAdditions": sb.String(),
 			},
@@ -109,8 +110,13 @@ func getGinRoutes() []groupInfo {
 			groupedRoutes.routes = append(groupedRoutes.routes, route{
 				method:  strings.ToUpper(r.Method),
 				path:    r.Path,
-				handler: handlerGroupNameParse.pkgName + "." + title.String(handler),
+				handler: handlerGroupNameParse.pkgName + "." + util.Title(handler),
 			})
+		}
+
+		jwt := g.GetAnnotation("jwt")
+		if len(jwt) > 0 {
+			groupedRoutes.middlewares = append(groupedRoutes.middlewares, strings.TrimSuffix(jwt, "Middleware")+"Middleware")
 		}
 
 		middleware := g.GetAnnotation("middleware")
@@ -140,9 +146,9 @@ func genSetup(groups []groupInfo) error {
 	for _, g := range groups {
 		if g.dirPath != routesDir {
 			importArr = append(importArr, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, g.dirPath)))
-			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.pkgName, title.String(g.groupName)))
+			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.pkgName, util.Title(g.groupName)))
 		} else {
-			regArr = append(regArr, fmt.Sprintf("Register%sRoute(e)", title.String(g.groupName)))
+			regArr = append(regArr, fmt.Sprintf("Register%sRoute(e)", util.Title(g.groupName)))
 		}
 	}
 

@@ -21,15 +21,15 @@ func Setup() {
 		panic(err)
 	}
 	if PluginInfo.Style == "" {
-		PluginInfo.Style = "gozero"
+		PluginInfo.Style = "go_zero"
 	}
-	RootPkg, err = getParentPackage(PluginInfo.Dir)
+	RootPkg, err = GetParentPackage(PluginInfo.Dir)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func getParentPackage(dir string) (string, error) {
+func GetParentPackage(dir string) (string, error) {
 	abs, err := filepath.Abs(dir)
 	if err != nil {
 		return "", err

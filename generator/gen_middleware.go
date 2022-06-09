@@ -7,6 +7,7 @@ import (
 	"github.com/MasterJoyHunan/gengin/tpl"
 
 	"github.com/zeromicro/go-zero/core/collection"
+	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
 )
 
@@ -27,7 +28,7 @@ func GenMiddleware() error {
 			templateName:    "contextTemplate",
 			builtinTemplate: tpl.MiddlewareTemplate,
 			data: map[string]string{
-				"name": title.String(name),
+				"name": util.Title(name),
 			},
 		})
 		if err != nil {

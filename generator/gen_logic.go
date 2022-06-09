@@ -10,6 +10,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/collection"
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
+	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
@@ -40,7 +41,7 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 	var requestString string
 
 	if len(route.RequestTypeName()) > 0 {
-		groupNameParse := parseGroupName(typeGroup[route.ResponseTypeName()], typesPacket, typesDir)
+		groupNameParse := parseGroupName(typeGroup[route.RequestTypeName()], typesPacket, typesDir)
 		requestString = "req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName())
 	}
 
@@ -64,7 +65,7 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 			"pkgName":      logicGroupNameParse.pkgName,
 			"hasImport":    len(imports) > 0,
 			"imports":      imports,
-			"function":     title.String(strings.TrimSuffix(logic, "Logic")),
+			"function":     util.Title(strings.TrimSuffix(logic, "Logic")),
 			"responseType": responseString,
 			"returnString": returnString,
 			"request":      requestString,

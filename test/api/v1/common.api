@@ -1,0 +1,26 @@
+syntax = "v1"
+
+@server(
+    jwt: Auth
+    group: common
+    middleware: SomeMiddleware,CorsMiddleware
+    prefix: /v1
+)
+
+service someapp {
+    @doc "获取所有书本信息"
+    @handler getCartList
+    get /common (cartRequest) returns (cartResponse)
+
+    @doc "获取书本信息"
+    @handler getCart
+    get /common/:id (cartRequest) returns (cartResponse)
+
+    @doc "添加书本信息"
+    @handler addCart
+    post /common (cartRequest) returns (cartResponse)
+
+    @doc "获取书本信息"
+    @handler editCart
+    put /common/:id (cartRequest) returns (cartResponse)
+}

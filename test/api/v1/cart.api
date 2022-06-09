@@ -1,0 +1,39 @@
+syntax = "v1"
+
+type cartRequest struct {
+    Name string `json:"name"` // 姓名
+    Age int `json:"age"`      // 年龄
+}
+
+
+type cartResponse struct {
+    Name string `json:"name"` // 姓名
+    Age int `json:"age"`      // 年龄
+}
+
+
+
+@server(
+    jwt: Auth
+    group: userCart
+    middleware: SomeMiddleware,CorsMiddleware
+    prefix: /v1
+)
+
+service someapp {
+    @doc "获取所有书本信息"
+    @handler getCartList
+    get /book (cartRequest) returns (cartResponse)
+
+    @doc "获取书本信息"
+    @handler getCart
+    get /book/:id (cartRequest) returns (cartResponse)
+
+    @doc "添加书本信息"
+    @handler addCart
+    post /book (cartRequest) returns (cartResponse)
+
+    @doc "获取书本信息"
+    @handler editCart
+    put /book/:id (cartRequest) returns (cartResponse)
+}

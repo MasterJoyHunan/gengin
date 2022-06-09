@@ -1,0 +1,38 @@
+syntax = "v1"
+
+type userRequest {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
+type userResponse {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+@server(
+	jwt: Auth
+	group: user
+	middleware: SomeMiddleware
+	prefix: /v1
+)
+
+
+service someapp {
+	@doc "获取所有用户信息"
+	@handler getUserList
+	get /user (userRequest) returns (userResponse)
+
+	@doc "获取用户信息"
+	@handler getUser
+	get /user/:id (userRequest) returns (userResponse)
+	
+	@doc "添加用户信息"
+	@handler addUser
+	post /user (userRequest) returns (userResponse)
+	
+	@doc "获取用户信息"
+	@handler editUser
+	put /user/:id (userRequest) returns (userResponse)
+	
+}
