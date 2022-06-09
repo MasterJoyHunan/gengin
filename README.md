@@ -171,3 +171,7 @@ you-app.go     # 如果文件已存在，不会重新生成
 如果对本项目有更好的建议或意见，欢迎提交 pr / issues，或者联系本人 tanwuyang88@gmail.com
 
 再次感谢 [go-zero](https://github.com/zeromicro/go-zero)
+
+### 协议
+
+[MIT](https://github.com/MasterJoyHunan/gengin/LICENSE)
