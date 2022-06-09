@@ -23,5 +23,5 @@ func main() {
 
 	{{.setup}}
 
-	route.Run("{{.host}}:{{.port}}")
+	{{.ginEngineName}}.Run("{{.host}}:{{.port}}")
 }
