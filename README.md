@@ -174,4 +174,4 @@ you-app.go     # 如果文件已存在，不会重新生成
 
 ### 协议
 
-[MIT](https://github.com/MasterJoyHunan/gengin/LICENSE)
+[MIT](https://github.com/MasterJoyHunan/gengin/blob/master/LICENSE)
