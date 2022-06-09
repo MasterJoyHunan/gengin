@@ -162,7 +162,7 @@ func writeType(writer io.Writer, tp spec.Type) error {
 		if found && strings.HasSuffix(before, "path") {
 			tag = strings.Replace(tag, "path", "uri", 1)
 		}
-		if err := writeProperty(writer, member.Name, member.Tag, member.GetComment(), member.Type); err != nil {
+		if err := writeProperty(writer, member.Name, tag, member.GetComment(), member.Type); err != nil {
 			return err
 		}
 	}
