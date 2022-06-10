@@ -8,7 +8,4 @@ syntax = "v1"
 service someapp {
     @handler swagger
     get /swagger
-
-    @handler json
-    get /json
 }

@@ -181,18 +181,3 @@ func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type) er
 	}
 	return err
 }
-
-//
-//func getTypesImportAlias(pkg groupBase) string {
-//	if pkg.dirPath == typesPacket {
-//		return ""
-//	}
-//	return pkg.pkgName + typePkgAlias + " "
-//}
-//
-//func getTypesUseAlias(pkg groupBase) string {
-//	if pkg.dirPath == typesPacket {
-//		return typesPacket + "."
-//	}
-//	return pkg.pkgName + typePkgAlias + "."
-//}

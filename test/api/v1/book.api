@@ -15,6 +15,7 @@ type bookResponse {
     group: book
     middleware: SomeMiddleware,CorsMiddleware
     prefix: /v1
+    swtags: "书本"
 )
 
 service someapp {
@@ -30,7 +31,7 @@ service someapp {
     @handler addBook
     post /book (bookRequest) returns (bookResponse)
 
-    @doc "获取书本信息"
+    @doc "编辑书本信息"
     @handler editBook
     put /book/:id (bookRequest) returns (bookResponse)
 }

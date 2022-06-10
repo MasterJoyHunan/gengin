@@ -65,9 +65,10 @@ func setup() {
 		Api:         parse,
 		ApiFilePath: "",
 		Style:       "go_zero",
-		Dir:         ".",
+		Dir:         "example",
 	}
 	prepare.RootPkg, err = prepare.GetParentPackage("../")
+	prepare.RootPkg += "/test/example"
 	if err != nil {
 		panic(err)
 	}

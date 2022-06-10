@@ -18,22 +18,23 @@ type cartResponse struct {
     group: userCart
     middleware: SomeMiddleware,CorsMiddleware
     prefix: /v1
+    swtags: "购物车"
 )
 
 service someapp {
-    @doc "获取所有书本信息"
+    @doc "获取所有购物车信息"
     @handler getCartList
-    get /book (cartRequest) returns (cartResponse)
+    get /cart (cartRequest) returns (cartResponse)
 
-    @doc "获取书本信息"
+    @doc "获取购物车信息"
     @handler getCart
-    get /book/:id (cartRequest) returns (cartResponse)
+    get /cart/:id (cartRequest) returns (cartResponse)
 
-    @doc "添加书本信息"
+    @doc "添加购物车信息"
     @handler addCart
-    post /book (cartRequest) returns (cartResponse)
+    post /cart (cartRequest) returns (cartResponse)
 
-    @doc "获取书本信息"
+    @doc "编辑购物车信息"
     @handler editCart
-    put /book/:id (cartRequest) returns (cartResponse)
+    put /cart/:id (cartRequest) returns (cartResponse)
 }

@@ -1,7 +1,7 @@
 syntax = "v1"
 
 type userRequest {
-	Name string `json:"name"`
+	Name string `path:"name"`
 	Age  int    `json:"age"`
 }
 
@@ -15,6 +15,7 @@ type userResponse {
 	group: user
 	middleware: SomeMiddleware
 	prefix: /v1
+	swtags: "用户相关"
 )
 
 
@@ -31,7 +32,7 @@ service someapp {
 	@handler addUser
 	post /user (userRequest) returns (userResponse)
 	
-	@doc "获取用户信息"
+	@doc "编辑用户信息"
 	@handler editUser
 	put /user/:id (userRequest) returns (userResponse)
 	

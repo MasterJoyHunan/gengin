@@ -10,6 +10,5 @@ import (
 	"v1/book.api"
 	"v1/swagger.api"
 	"v1/cart.api"
-	"v1/common.api"
 	"v1/no_group.api"
 )

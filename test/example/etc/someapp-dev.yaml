@@ -1,0 +1,22 @@
+Server:
+  Name: someapp
+  Host: 127.0.0.1
+  Port: 8888
+
+Jwt:
+  Secret:
+  Expire:
+
+Mysql:
+  Host:
+  Port:
+  User:
+  Pwd:
+  Db:
+
+Redis:
+  Host:
+  Port:
+  User:
+  Pwd:
+  Db:
