@@ -38,22 +38,22 @@ gengin 基于 go-zero 开发，是一个 go-zero 的插件，只需定义 .api �
 
 前提是安装了go-zero，如果没有安装，则进行安装
 
-go 1.18 以下使用
+go 1.16 以下使用
 ```sh
 go get -u github.com/zeromicro/go-zero/tools/goctl
 ```
-go 1.18 及以上使用
+go 1.16 及以上使用
 ```sh
 go install github.com/zeromicro/go-zero/tools/goctl@v1.3.8
 ```
 
 再安装本项目，作为 go-zero 的插件
 
-go 1.18 以下使用
+go 1.16 以下使用
 ```sh
 go get -u github.com/MasterJoyHunan/gengin
 ```
-go 1.18 及以上使用
+go 1.16 及以上使用
 ```sh
 go install github.com/MasterJoyHunan/gengin@v1.1.2
 ```
