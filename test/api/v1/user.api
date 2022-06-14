@@ -8,7 +8,25 @@ type userRequest {
 type userResponse {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
+	embed1 []Embed1 `json:"em1"`
+	embed2 Embed2 `json:"em2"`
+	map1 map[string]string `json:"map1"` // test 
+	map2 map[string]Value1 `json:"map2"`
 }
+
+type Embed1 {
+	foo int `json:"foo"`
+}
+type Embed2 {
+	foo int `json:"foo"`
+}
+
+
+
+type Value1 {
+	name string `json:"name"`
+}
+
 
 @server(
 	jwt: Auth

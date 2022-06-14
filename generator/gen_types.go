@@ -78,8 +78,8 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 	container := make(map[string]map[string]int, 0)
 	for _, group := range PluginInfo.Api.Service.Groups {
 		for _, route := range group.Routes {
-			joinContainer(container, route.RequestTypeName(), group.GetAnnotation(groupProperty))
-			joinContainer(container, route.ResponseTypeName(), group.GetAnnotation(groupProperty))
+			joinContainer(container, route.RequestType, group.GetAnnotation(groupProperty))
+			joinContainer(container, route.ResponseType, group.GetAnnotation(groupProperty))
 		}
 	}
 
@@ -131,11 +131,35 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 	return groupTypes, nil
 }
 
-func joinContainer(container map[string]map[string]int, typeName string, group string) {
+func joinContainer(container map[string]map[string]int, defType spec.Type, group string) {
+	defineStruct, ok := defType.(spec.DefineStruct)
+	if !ok {
+		return
+	}
+	typeName := defineStruct.Name()
+	members := defineStruct.Members
+	for _, m := range members {
+		switch v := m.Type.(type) {
+		case spec.PrimitiveType:
+			//spec.PrimitiveType{RawName: name}
+		case spec.MapType:
+			joinContainer(container, v.Value, group)
+			//spec.MapType{RawName: name, Key: v.Key, Value: v.Value}
+		case spec.ArrayType:
+			joinContainer(container, v.Value, group)
+			//spec.ArrayType{RawName: name, Value: v.Value}
+		case spec.InterfaceType:
+			//spec.InterfaceType{RawName: name}
+		case spec.PointerType:
+		//spec.PointerType{RawName: name, Type: v.Type}
+		case spec.DefineStruct:
+			joinContainer(container, m.Type, group)
+		}
+	}
 	if typeName == "" {
 		return
 	}
-	_, ok := container[typeName]
+	_, ok = container[typeName]
 	if !ok {
 		container[typeName] = make(map[string]int, 0)
 	}

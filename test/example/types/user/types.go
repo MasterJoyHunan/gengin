@@ -7,6 +7,22 @@ type UserRequest struct {
 }
 
 type UserResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code   int               `json:"code"`
+	Msg    string            `json:"msg"`
+	Embed1 []Embed1          `json:"em1"`
+	Embed2 Embed2            `json:"em2"`
+	Map1   map[string]string `json:"map1"` // test
+	Map2   map[string]Value1 `json:"map2"`
+}
+
+type Embed1 struct {
+	Foo int `json:"foo"`
+}
+
+type Embed2 struct {
+	Foo int `json:"foo"`
+}
+
+type Value1 struct {
+	Name string `json:"name"`
 }
