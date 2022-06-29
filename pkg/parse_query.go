@@ -44,7 +44,7 @@ func (p *ParseRequestBody) uri(i spec.DefineStruct) string {
 }
 
 func (p *ParseRequestBody) from(i spec.DefineStruct) string {
-	if p.hasTag(i, "from") || p.hasTag(i, "json") {
+	if p.hasTag(i, "form") || p.hasTag(i, "json") {
 		return p.returnCode("ShouldBind")
 	}
 	return ""
