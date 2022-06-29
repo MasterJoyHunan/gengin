@@ -56,6 +56,12 @@ func TestGenHandlers(t *testing.T) {
 	}
 }
 
+func TestGenResponse(t *testing.T) {
+	if err := generator.GenResponse(); err != nil {
+		t.Failed()
+	}
+}
+
 func setup() {
 	parse, err := parser.Parse("api/someapp.api")
 	if err != nil {

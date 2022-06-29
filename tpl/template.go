@@ -29,4 +29,7 @@ var (
 
 	//go:embed handler.tpl
 	HandlerTemplate string
+
+	//go:embed response.tpl
+	ResponseTemplate string
 )

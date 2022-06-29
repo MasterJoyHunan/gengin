@@ -15,6 +15,7 @@ func main() {
 	Must(generator.GenLogic())
 	Must(generator.GenRoutes())
 	Must(generator.GenHandlers())
+	Must(generator.GenResponse())
 
 }
 

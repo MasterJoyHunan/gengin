@@ -21,6 +21,9 @@ const (
 	middlewarePacket = "middleware"
 	middlewareDir    = middlewarePacket
 
+	responsePacket = "response"
+	responseDir    = "internal/response"
+
 	typePkgAlias = "Type"
 
 	groupProperty = "group"

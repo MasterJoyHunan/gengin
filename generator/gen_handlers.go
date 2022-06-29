@@ -80,7 +80,10 @@ func genHandlerImports(group spec.Group, route spec.Route) string {
 		alias := getTypesImportAlias(groupNameParse)
 		imports = append(imports, fmt.Sprintf("%s\"%s\"",
 			alias, pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
-
 	}
+
+	// handler 需要统一返回处理
+	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, responseDir)))
+
 	return strings.Join(imports, "\n\t")
 }

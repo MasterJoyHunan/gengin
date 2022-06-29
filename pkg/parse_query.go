@@ -62,7 +62,7 @@ func (p *ParseRequestBody) hasTag(i spec.DefineStruct, needTag string) bool {
 
 func (p *ParseRequestBody) returnCode(method string) string {
 	return fmt.Sprintf(`    if err := c.%s(&%s); err != nil {
-		// response.HandleResponse(c, nil, err)
+		response.HandleResponse(c, nil, err)
 		return
 	}`, method, req) + "\n"
 }
