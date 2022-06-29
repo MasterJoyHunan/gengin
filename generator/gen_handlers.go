@@ -64,7 +64,6 @@ func genHandler(group spec.Group, route spec.Route) error {
 			"parseRequest":   parseRequest,
 		},
 	})
-
 }
 
 func genHandlerImports(group spec.Group, route spec.Route) string {

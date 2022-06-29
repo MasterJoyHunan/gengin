@@ -31,21 +31,21 @@ func (p *ParseRequestBody) BuildParseRequestStr(requestName string, types []spec
 
 func (p *ParseRequestBody) header(i spec.DefineStruct) string {
 	if p.hasTag(i, "header") {
-		return p.returnCode("ShouldBindHeader", 1001)
+		return p.returnCode("ShouldBindHeader")
 	}
 	return ""
 }
 
 func (p *ParseRequestBody) uri(i spec.DefineStruct) string {
 	if p.hasTag(i, "path") {
-		return p.returnCode("ShouldBindUri", 1001)
+		return p.returnCode("ShouldBindUri")
 	}
 	return ""
 }
 
 func (p *ParseRequestBody) from(i spec.DefineStruct) string {
 	if p.hasTag(i, "from") || p.hasTag(i, "json") {
-		return p.returnCode("ShouldBind", 1001)
+		return p.returnCode("ShouldBind")
 	}
 	return ""
 }
@@ -60,13 +60,9 @@ func (p *ParseRequestBody) hasTag(i spec.DefineStruct, needTag string) bool {
 	return false
 }
 
-func (p *ParseRequestBody) returnCode(method string, code int) string {
+func (p *ParseRequestBody) returnCode(method string) string {
 	return fmt.Sprintf(`    if err := c.%s(&%s); err != nil {
-		// TODO 处理异常
-		c.JSON(200, gin.H{
-            "code":    %d,
-            "message": "失败",
-        })
+		// response.HandleResponse(c, nil, err)
 		return
-	}`, method, req, code) + "\n"
+	}`, method, req) + "\n"
 }
