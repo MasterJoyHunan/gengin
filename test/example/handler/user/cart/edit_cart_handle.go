@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// EditCartHandle 编辑购物车信息
 func EditCartHandle(c *gin.Context) {
 	var req cartType.CartRequest
 	if err := c.ShouldBind(&req); err != nil {

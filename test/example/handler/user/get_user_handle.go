@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetUserHandle 获取用户信息
 func GetUserHandle(c *gin.Context) {
 	var req userType.UserRequest
 	if err := c.ShouldBindUri(&req); err != nil {

@@ -54,6 +54,7 @@ func genHandler(group spec.Group, route spec.Route) error {
 		templateName:    "handlerTemplate",
 		builtinTemplate: tpl.HandlerTemplate,
 		data: map[string]interface{}{
+			"comment":        parseComment(route),
 			"pkgName":        handlerGroupNameParse.pkgName,
 			"importPackages": genHandlerImports(group, route),
 			"handlerName":    util.Title(handler),

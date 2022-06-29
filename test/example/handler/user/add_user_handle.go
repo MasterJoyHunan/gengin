@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AddUserHandle 添加用户信息
 func AddUserHandle(c *gin.Context) {
 	var req userType.UserRequest
 	if err := c.ShouldBindUri(&req); err != nil {

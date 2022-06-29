@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// PingHandle 无Group信息
 func PingHandle(c *gin.Context) {
 	err := logic.Ping()
 	response.HandleResponse(c, nil, err)

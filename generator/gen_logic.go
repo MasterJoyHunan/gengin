@@ -62,6 +62,7 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 		templateName:    "logicTemplate",
 		builtinTemplate: tpl.LogicTemplate,
 		data: map[string]interface{}{
+			"comment":      parseComment(route),
 			"pkgName":      logicGroupNameParse.pkgName,
 			"hasImport":    len(imports) > 0,
 			"imports":      imports,

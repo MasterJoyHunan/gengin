@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// EditUserHandle 编辑用户信息
 func EditUserHandle(c *gin.Context) {
 	var req userType.UserRequest
 	if err := c.ShouldBindUri(&req); err != nil {

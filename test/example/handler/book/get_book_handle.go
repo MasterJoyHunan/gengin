@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetBookHandle 获取书本信息
 func GetBookHandle(c *gin.Context) {
 	var req bookType.BookRequest
 	if err := c.ShouldBind(&req); err != nil {

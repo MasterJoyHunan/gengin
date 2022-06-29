@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetUserListHandle 获取所有用户信息
 func GetUserListHandle(c *gin.Context) {
 	var req userType.UserRequest
 	if err := c.ShouldBindUri(&req); err != nil {

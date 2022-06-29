@@ -6,6 +6,7 @@ import (
     "github.com/gin-gonic/gin"
 )
 
+// {{.handlerName}} {{.comment}}
 func {{.handlerName}}(c *gin.Context) {
 {{if .hasRequest}}    var req {{.requestType}}
 {{.parseRequest}}

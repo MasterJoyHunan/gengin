@@ -110,3 +110,17 @@ func getTypesUseAlias(pkg groupBase) string {
 	}
 	return pkg.pkgName + typePkgAlias + "."
 }
+
+func parseComment(r spec.Route) string {
+	if r.AtDoc.Text != "" {
+		return strings.Trim(r.AtDoc.Text, "\"")
+	}
+	if len(r.HandlerDoc) != 0 {
+		str := ""
+		for _, d := range r.HandlerDoc {
+			str += strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(d, "/", ""), "*", ""), "\n", ""), "\t", "")
+		}
+		return str
+	}
+	return ""
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SwaggerHandle
 func SwaggerHandle(c *gin.Context) {
 	err := swagger.Swagger()
 	response.HandleResponse(c, nil, err)

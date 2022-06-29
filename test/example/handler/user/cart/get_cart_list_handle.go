@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetCartListHandle 获取所有购物车信息
 func GetCartListHandle(c *gin.Context) {
 	var req cartType.CartRequest
 	if err := c.ShouldBind(&req); err != nil {
