@@ -55,7 +55,7 @@ go get -u github.com/MasterJoyHunan/gengin
 ```
 go 1.16 及以上使用
 ```sh
-go install github.com/MasterJoyHunan/gengin@v1.4.0
+go install github.com/MasterJoyHunan/gengin@v1.4.1
 ```
 
 #### 初始化一个 GO 项目
