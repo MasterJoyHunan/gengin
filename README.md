@@ -126,27 +126,33 @@ goctl api plugin -p gengin -api xxx.api -dir .
 #### 生成的目录结构如下
 
 ```
-├─config       # 配置文件对应的 struct
-├─etc          # yaml 配置文件
-├─handler      # 控制器层
-├─logic        # 服务层
-├─middleware   # 中间件层
-├─routes       # 路由定义
-├─types        # 请求与相应的 struct
-you-app.go     # main 文件
+├─config          # 配置文件对应的 struct
+├─etc             # yaml 配置文件
+├─handler         # 控制器层
+├─internal        # 内部处理逻辑
+│  ├─response     # 统一返回
+│  └─translator   # 返回错误国际化
+├─logic           # 服务层
+├─middleware      # 中间件层
+├─routes          # 路由定义
+├─types           # 请求与相应的 struct
+you-app.go        # main 文件
 ```
 
 ### 重新执行程序那些文件会重新生成
 
 ```
-├─config       # 如果文件已存在，不会重新生成
-├─etc          # 如果文件已存在，不会重新生成
-├─handler      # 如果文件已存在，不会重新生成
-├─logic        # 如果文件已存在，不会重新生成
-├─middleware   # 如果文件已存在，不会重新生成
-├─routes       # gengin生成的文件会重新生成，请不要修改。手动新增的文件不会
-├─types        # gengin生成的文件会重新生成，请不要修改。手动新增的文件不会
-you-app.go     # 如果文件已存在，不会重新生成
+├─config          # 如果文件已存在，不会重新生成
+├─etc             # 如果文件已存在，不会重新生成
+├─handler         # 如果文件已存在，不会重新生成
+├─internal        # 如果文件已存在，不会重新生成
+│  ├─response     # 如果文件已存在，不会重新生成
+│  └─translator   # 如果文件已存在，不会重新生成
+├─logic           # 如果文件已存在，不会重新生成
+├─middleware      # 如果文件已存在，不会重新生成
+├─routes          # gengin生成的文件会重新生成，请不要修改。手动新增的文件不会
+├─types           # gengin生成的文件会重新生成，请不要修改。手动新增的文件不会
+you-app.go        # 如果文件已存在，不会重新生成
 ```
 
 ### 注意事项
