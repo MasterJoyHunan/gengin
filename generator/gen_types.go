@@ -16,6 +16,9 @@ import (
 
 var groupTypes []TypeBelongGroup
 var typeGroup = make(map[string]string)
+var requestTypes = make(map[string]int)
+
+const labelName = "label"
 
 type TypeBelongGroup struct {
 	GroupName string
@@ -78,8 +81,8 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 	container := make(map[string]map[string]int, 0)
 	for _, group := range PluginInfo.Api.Service.Groups {
 		for _, route := range group.Routes {
-			joinContainer(container, route.RequestType, group.GetAnnotation(groupProperty))
-			joinContainer(container, route.ResponseType, group.GetAnnotation(groupProperty))
+			joinContainer(container, route.RequestType, group.GetAnnotation(groupProperty), true)
+			joinContainer(container, route.ResponseType, group.GetAnnotation(groupProperty), false)
 		}
 	}
 
@@ -131,29 +134,27 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 	return groupTypes, nil
 }
 
-func joinContainer(container map[string]map[string]int, defType spec.Type, group string) {
+func joinContainer(container map[string]map[string]int, defType spec.Type, group string, isRequestType bool) {
 	defineStruct, ok := defType.(spec.DefineStruct)
 	if !ok {
 		return
 	}
+
 	typeName := defineStruct.Name()
+
+	if isRequestType {
+		requestTypes[typeName] = 1
+	}
+
 	members := defineStruct.Members
 	for _, m := range members {
 		switch v := m.Type.(type) {
-		case spec.PrimitiveType:
-			//spec.PrimitiveType{RawName: name}
 		case spec.MapType:
-			joinContainer(container, v.Value, group)
-			//spec.MapType{RawName: name, Key: v.Key, Value: v.Value}
+			joinContainer(container, v.Value, group, isRequestType)
 		case spec.ArrayType:
-			joinContainer(container, v.Value, group)
-			//spec.ArrayType{RawName: name, Value: v.Value}
-		case spec.InterfaceType:
-			//spec.InterfaceType{RawName: name}
-		case spec.PointerType:
-		//spec.PointerType{RawName: name, Type: v.Type}
+			joinContainer(container, v.Value, group, isRequestType)
 		case spec.DefineStruct:
-			joinContainer(container, m.Type, group)
+			joinContainer(container, m.Type, group, isRequestType)
 		}
 	}
 	if typeName == "" {
@@ -178,14 +179,11 @@ func writeType(writer io.Writer, tp spec.Type) error {
 			if _, err := fmt.Fprintf(writer, "%s\n", util.Title(member.Type.Name())); err != nil {
 				return err
 			}
-
 			continue
 		}
-		tag := member.Tag
-		before, _, found := strings.Cut(tag, ":")
-		if found && strings.HasSuffix(before, "path") {
-			tag = strings.Replace(tag, "path", "uri", 1)
-		}
+
+		tag := OverrideTag(tp, member)
+
 		if err := writeProperty(writer, member.Name, tag, member.GetComment(), member.Type); err != nil {
 			return err
 		}
@@ -204,4 +202,31 @@ func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type) er
 		_, err = fmt.Fprintf(writer, "%s %s %s\n", util.Title(name), tp.Name(), tag)
 	}
 	return err
+}
+
+func OverrideTag(tp spec.Type, member spec.Member) string {
+	// 将 path 替换为 uri
+	tag := member.Tag
+	before, _, found := strings.Cut(tag, ":")
+	if found && strings.HasSuffix(before, "path") {
+		tag = strings.Replace(tag, "path", "uri", 1)
+	}
+
+	// 将注释加入到 label, 用于 validator 验证时中文返回 see http://github.com/go-playground/validator/v10
+	// 希望只对 request type 进行处理
+	_, ok := requestTypes[tp.Name()]
+	if !ok {
+		return tag
+	}
+
+	label := ""
+	if member.Comment != "" {
+		label = strings.ReplaceAll(member.Comment, "/", "")
+		label = strings.Trim(label, " ")
+	}
+	if label != "" {
+		label = fmt.Sprintf("%s:\"%s\"", labelName, label)
+		tag = fmt.Sprintf("%s %s`", tag[:len(tag)-1], label)
+	}
+	return tag
 }

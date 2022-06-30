@@ -1,8 +1,12 @@
 syntax = "v1"
 
 type userRequest {
-	Name string `path:"name"`
+	Name string `path:"name"` // 姓名
 	Age  int    `json:"age"`
+	embed3 Embed3 `json:"embed3"` // exs
+	embed1 []Embed1 `json:"em1"` // xs
+	embed2 Embed2 `json:"em2"` // dsd
+	map2 map[string]Value1 `json:"map2"`
 }
 
 type userResponse {
@@ -15,10 +19,14 @@ type userResponse {
 }
 
 type Embed1 {
-	foo int `json:"foo"`
+	foo int `json:"foo"` // x
 }
 type Embed2 {
-	foo int `json:"foo"`
+	foo int `json:"foo"` // y
+}
+
+type Embed3 {
+	foo int `json:"foo"` // Embed3
 }
 
 

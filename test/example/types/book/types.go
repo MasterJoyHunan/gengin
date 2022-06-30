@@ -2,8 +2,8 @@
 package book
 
 type BookRequest struct {
-	Name string `json:"name"` // 姓名
-	Age  int    `json:"age"`  // 年龄
+	Name string `json:"name" label:"姓名"` // 姓名
+	Age  int    `json:"age" label:"年龄"`  // 年龄
 }
 
 type BookResponse struct {

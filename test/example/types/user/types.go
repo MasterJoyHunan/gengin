@@ -2,8 +2,12 @@
 package user
 
 type UserRequest struct {
-	Name string `uri:"name"`
-	Age  int    `json:"age"`
+	Name   string            `uri:"name" label:"姓名"` // 姓名
+	Age    int               `json:"age"`
+	Embed3 Embed3            `json:"embed3" label:"exs"` // exs
+	Embed1 []Embed1          `json:"em1" label:"xs"`     // xs
+	Embed2 Embed2            `json:"em2" label:"dsd"`    // dsd
+	Map2   map[string]Value1 `json:"map2"`
 }
 
 type UserResponse struct {
@@ -16,11 +20,15 @@ type UserResponse struct {
 }
 
 type Embed1 struct {
-	Foo int `json:"foo"`
+	Foo int `json:"foo" label:"x"` // x
 }
 
 type Embed2 struct {
-	Foo int `json:"foo"`
+	Foo int `json:"foo" label:"y"` // y
+}
+
+type Embed3 struct {
+	Foo int `json:"foo" label:"Embed3"` // Embed3
 }
 
 type Value1 struct {
