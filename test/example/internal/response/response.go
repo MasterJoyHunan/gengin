@@ -1,6 +1,10 @@
 package response
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/MasterJoyHunan/gengin/test/example/internal/translator"
+
+	"github.com/gin-gonic/gin"
+)
 
 // UnifiedResponse 统一返回
 type UnifiedResponse struct {
@@ -13,15 +17,15 @@ type UnifiedResponse struct {
 func HandleResponse(c *gin.Context, data any, err error) {
 	if err != nil {
 		c.JSON(200, UnifiedResponse{
-			Code:    400,
+			Code:    500,
 			Data:    nil,
-			Message: err.Error(),
+			Message: translator.Translate(err),
 		})
 		return
 	}
 
 	c.JSON(200, UnifiedResponse{
-		Code:    100,
+		Code:    0,
 		Data:    data,
 		Message: "成功",
 	})
@@ -30,7 +34,7 @@ func HandleResponse(c *gin.Context, data any, err error) {
 // HandleAbortResponse 统一 Abort 返回处理
 func HandleAbortResponse(c *gin.Context, err string) {
 	c.AbortWithStatusJSON(200, UnifiedResponse{
-		Code:    400,
+		Code:    500,
 		Data:    nil,
 		Message: err,
 	})

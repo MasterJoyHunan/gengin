@@ -62,6 +62,12 @@ func TestGenResponse(t *testing.T) {
 	}
 }
 
+func TestGenI18N(t *testing.T) {
+	if err := generator.GenI18N(); err != nil {
+		t.Failed()
+	}
+}
+
 func setup() {
 	parse, err := parser.Parse("api/someapp.api")
 	if err != nil {

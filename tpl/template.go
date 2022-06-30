@@ -32,4 +32,7 @@ var (
 
 	//go:embed response.tpl
 	ResponseTemplate string
+
+	//go:embed i18n.tpl
+	I18nTemplate string
 )

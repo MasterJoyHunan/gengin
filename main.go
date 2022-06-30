@@ -16,7 +16,7 @@ func main() {
 	Must(generator.GenRoutes())
 	Must(generator.GenHandlers())
 	Must(generator.GenResponse())
-
+	Must(generator.GenI18N())
 }
 
 func Must(err error) {

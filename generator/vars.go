@@ -24,6 +24,9 @@ const (
 	responsePacket = "response"
 	responseDir    = "internal/response"
 
+	i18nPacket = "translator"
+	i18nDir    = "internal/translator"
+
 	typePkgAlias = "Type"
 
 	groupProperty = "group"
