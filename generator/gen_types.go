@@ -139,6 +139,11 @@ func joinContainer(container map[string]map[string]int, defType spec.Type, group
 	if !ok {
 		return
 	}
+	for _, t := range PluginInfo.Api.Types {
+		if t.Name() == defType.Name() {
+			defineStruct = t.(spec.DefineStruct)
+		}
+	}
 
 	typeName := defineStruct.Name()
 

@@ -3,7 +3,6 @@ syntax = "v1"
 type userRequest {
 	Name string `path:"name"` // 姓名
 	Age  int    `json:"age"`
-	embed3 Embed3 `json:"embed3"` // exs
 	embed1 []Embed1 `json:"em1"` // xs
 	embed2 Embed2 `json:"em2"` // dsd
 	map2 map[string]Value1 `json:"map2"`
@@ -20,6 +19,7 @@ type userResponse {
 
 type Embed1 {
 	foo int `json:"foo"` // x
+	Embed3 Embed3 `json:"embed3"` // esc234
 }
 type Embed2 {
 	foo int `json:"foo"` // y
@@ -32,7 +32,7 @@ type Embed3 {
 
 
 type Value1 {
-	name string `json:"name"`
+	name string `json:"name"` // vads3
 }
 
 
@@ -53,13 +53,13 @@ service someapp {
 	@doc "获取用户信息"
 	@handler getUser
 	get /user/:id (userRequest) returns (userResponse)
-	
+
 	@doc "添加用户信息"
 	@handler addUser
 	post /user (userRequest) returns (userResponse)
-	
+
 	@doc "编辑用户信息"
 	@handler editUser
 	put /user/:id (userRequest) returns (userResponse)
-	
+
 }
