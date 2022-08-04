@@ -13,7 +13,7 @@ type Jwt struct {
 
 type Mysql struct{
     Host string
-    Port string
+    Port int
     User string
     Pwd  string
     Db   string
@@ -21,7 +21,7 @@ type Mysql struct{
 
 type Redis struct{
     Host string
-    Port string
+    Port int
     User string
     Pwd  string
     Db   string
