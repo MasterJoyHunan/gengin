@@ -3,7 +3,7 @@ package {{.pkgName}}
 type Server struct {
     Name string
     Host string
-    Port string
+    Port int
 }
 
 type Jwt struct {
