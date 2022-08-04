@@ -29,5 +29,5 @@ type Redis struct{
     Port int
     User string
     Pwd  string
-    Db   string
+    Db   int
 }
