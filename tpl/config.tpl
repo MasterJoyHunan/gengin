@@ -11,6 +11,11 @@ type Jwt struct {
     Expire int
 }
 
+type Log struct {
+    Dir   string
+    Level string
+}
+
 type Mysql struct{
     Host string
     Port int
