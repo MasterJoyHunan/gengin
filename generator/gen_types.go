@@ -151,6 +151,19 @@ func joinContainer(container map[string]map[string]int, defType spec.Type, group
 		requestTypes[typeName] = 1
 	}
 
+	if typeName == "" {
+		return
+	}
+	_, ok = container[typeName]
+	if !ok {
+		container[typeName] = make(map[string]int, 0)
+	} else {
+		if container[typeName][group] == 1 {
+			return
+		}
+	}
+	container[typeName][group] = 1
+
 	members := defineStruct.Members
 	for _, m := range members {
 		switch v := m.Type.(type) {
@@ -162,14 +175,6 @@ func joinContainer(container map[string]map[string]int, defType spec.Type, group
 			joinContainer(container, m.Type, group, isRequestType)
 		}
 	}
-	if typeName == "" {
-		return
-	}
-	_, ok = container[typeName]
-	if !ok {
-		container[typeName] = make(map[string]int, 0)
-	}
-	container[typeName][group] = 1
 }
 
 func writeType(writer io.Writer, tp spec.Type) error {
