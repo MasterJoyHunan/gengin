@@ -23,9 +23,9 @@ func (p *ParseRequestBody) BuildParseRequestStr(requestName string, types []spec
 			break
 		}
 	}
+	sb.WriteString(p.from(structType))
 	sb.WriteString(p.header(structType))
 	sb.WriteString(p.uri(structType))
-	sb.WriteString(p.from(structType))
 	return sb.String()
 }
 
