@@ -145,8 +145,8 @@ func genSetup(groups []groupInfo) error {
 	var regArr []string
 	for _, g := range groups {
 		if g.dirPath != routesDir {
-			importArr = append(importArr, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, g.dirPath)))
-			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.pkgName, util.Title(g.groupName)))
+			importArr = append(importArr, fmt.Sprintf("%s \"%s\"", g.groupName, pathx.JoinPackages(RootPkg, g.dirPath)))
+			regArr = append(regArr, fmt.Sprintf("%s.Register%sRoute(e)", g.groupName, util.Title(g.groupName)))
 		} else {
 			regArr = append(regArr, fmt.Sprintf("Register%sRoute(e)", util.Title(g.groupName)))
 		}

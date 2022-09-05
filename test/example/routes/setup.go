@@ -2,10 +2,10 @@
 package routes
 
 import (
-	"github.com/MasterJoyHunan/gengin/test/example/routes/book"
-	"github.com/MasterJoyHunan/gengin/test/example/routes/swagger"
-	"github.com/MasterJoyHunan/gengin/test/example/routes/user"
-	"github.com/MasterJoyHunan/gengin/test/example/routes/user/cart"
+	book "github.com/MasterJoyHunan/gengin/test/example/routes/book"
+	swagger "github.com/MasterJoyHunan/gengin/test/example/routes/swagger"
+	user "github.com/MasterJoyHunan/gengin/test/example/routes/user"
+	userCart "github.com/MasterJoyHunan/gengin/test/example/routes/user/cart"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +14,6 @@ func Setup(e *gin.Engine) {
 	user.RegisterUserRoute(e)
 	book.RegisterBookRoute(e)
 	swagger.RegisterSwaggerRoute(e)
-	cart.RegisterUserCartRoute(e)
+	userCart.RegisterUserCartRoute(e)
 	RegisterRoute(e)
 }
