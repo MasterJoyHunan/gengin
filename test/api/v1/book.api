@@ -13,7 +13,7 @@ type bookResponse {
 @server(
     jwt: Auth
     group: book
-    middleware: SomeMiddleware,CorsMiddleware
+    middleware: SomeMiddleware,CorsMiddleware,JwtOption
     prefix: /v1
     swtags: "书本"
 )

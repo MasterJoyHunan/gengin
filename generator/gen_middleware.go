@@ -14,11 +14,11 @@ import (
 func GenMiddleware() error {
 	middlewares := getMiddleware()
 	for _, item := range middlewares {
-		middlewareFilename := strings.TrimSuffix(strings.ToLower(item), "middleware") + "_middleware"
-		filename, err := format.FileNamingFormat(PluginInfo.Style, middlewareFilename)
+		preFilename, err := format.FileNamingFormat(PluginInfo.Style, item)
 		if err != nil {
 			return err
 		}
+		filename := strings.TrimSuffix(strings.TrimSuffix(strings.ToLower(preFilename), "_middleware"), "middleware") + "_middleware"
 
 		name := strings.TrimSuffix(item, "Middleware") + "Middleware"
 		err = genFile(fileGenConfig{

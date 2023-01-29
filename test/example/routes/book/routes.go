@@ -10,7 +10,7 @@ import (
 
 func RegisterBookRoute(e *gin.Engine) {
 	g := e.Group("/v1")
-	g.Use(middleware.AuthMiddleware, middleware.SomeMiddleware, middleware.CorsMiddleware)
+	g.Use(middleware.AuthMiddleware, middleware.SomeMiddleware, middleware.CorsMiddleware, middleware.JwtOptionMiddleware)
 	g.GET("/book", book.GetBookListHandle)
 	g.GET("/book/:id", book.GetBookHandle)
 	g.POST("/book", book.AddBookHandle)
