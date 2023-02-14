@@ -9,6 +9,9 @@ const (
 	configPacket = "config"
 	configDir    = configPacket
 
+	svcPacket = "svc"
+	svcDir    = svcPacket
+
 	handlerPacket = "handler"
 	handlerDir    = handlerPacket
 

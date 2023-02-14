@@ -2,9 +2,9 @@ package translator
 
 import (
 	"reflect"
+	"regexp"
 
 	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	"github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -17,7 +17,7 @@ const labelName = "label"
 
 func init() {
 	validate := binding.Validator.Engine().(*validator.Validate)
-	uni := ut.New(en.New(), zh.New())
+	uni := ut.New(zh.New())
 	trans, _ = uni.GetTranslator("zh")
 
 	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
@@ -42,12 +42,13 @@ func Translate(errs error) string {
 
 // customError 自定义异常
 func customError(validate *validator.Validate) {
-	validate.RegisterValidation("phone", func(fl validator.FieldLevel) bool {
-		if len(fl.Field().String()) != 11 {
-			return false
-		}
-		return true
-	})
+	validate.RegisterValidation(
+		"phone",
+		func(fl validator.FieldLevel) bool {
+			regular := "^1\\d{2}\\d{8}$"
+			reg := regexp.MustCompile(regular)
+			return reg.MatchString(fl.Field().String())
+		})
 	validate.RegisterTranslation(
 		"phone",
 		trans,

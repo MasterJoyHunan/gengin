@@ -3,6 +3,7 @@ package book
 import (
 	"github.com/MasterJoyHunan/gengin/test/example/internal/response"
 	"github.com/MasterJoyHunan/gengin/test/example/logic/book"
+	"github.com/MasterJoyHunan/gengin/test/example/svc"
 	bookType "github.com/MasterJoyHunan/gengin/test/example/types/book"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,6 @@ func EditBookHandle(c *gin.Context) {
 		return
 	}
 
-	resp, err := book.EditBook(&req)
+	resp, err := book.EditBook(&req, svc.NewServiceContext(c))
 	response.HandleResponse(c, resp, err)
 }

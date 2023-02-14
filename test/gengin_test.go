@@ -68,6 +68,12 @@ func TestGenI18N(t *testing.T) {
 	}
 }
 
+func TestGenSvcContext(t *testing.T) {
+	if err := generator.GenSvcContext(); err != nil {
+		t.Failed()
+	}
+}
+
 func setup() {
 	parse, err := parser.Parse("api/someapp.api")
 	if err != nil {

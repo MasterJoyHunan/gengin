@@ -42,8 +42,10 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 
 	if len(route.RequestTypeName()) > 0 {
 		groupNameParse := parseGroupName(typeGroup[route.RequestTypeName()], typesPacket, typesDir)
-		requestString = "req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName())
+		requestString = "req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName()) + " ,"
 	}
+	// + svc context
+	requestString += "ctx *svc.ServiceContext"
 
 	if len(route.ResponseTypeName()) > 0 {
 		groupNameParse := parseGroupName(typeGroup[route.ResponseTypeName()], typesPacket, typesDir)
@@ -85,6 +87,8 @@ func genLogicImports(route spec.Route) string {
 		groupNameParse := parseGroupName(typeGroup[route.ResponseTypeName()], typesPacket, typesDir)
 		importSet.AddStr(fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
 	}
+
+	importSet.AddStr(fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, "svc")))
 
 	importArr := importSet.KeysStr()
 	sort.Strings(importArr)

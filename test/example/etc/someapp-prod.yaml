@@ -7,6 +7,10 @@ Jwt:
   Secret:
   Expire:
 
+Log:
+  Dir:
+  Level:
+
 Mysql:
   Host:
   Port:

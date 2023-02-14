@@ -17,6 +17,7 @@ func main() {
 	Must(generator.GenHandlers())
 	Must(generator.GenResponse())
 	Must(generator.GenI18N())
+	Must(generator.GenSvcContext())
 }
 
 func Must(err error) {

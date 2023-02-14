@@ -85,6 +85,7 @@ func genHandlerImports(group spec.Group, route spec.Route) string {
 
 	// handler 需要统一返回处理
 	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, responseDir)))
+	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, "svc")))
 
 	return strings.Join(imports, "\n\t")
 }

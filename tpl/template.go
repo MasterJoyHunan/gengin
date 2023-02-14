@@ -9,6 +9,9 @@ var (
 	//go:embed config.tpl
 	ConfigTemplate string
 
+	//go:embed svc_context.tpl
+	SvcContextTemplate string
+
 	//go:embed main.tpl
 	MainTemplate string
 
