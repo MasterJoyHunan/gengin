@@ -34,21 +34,21 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 		return err
 	}
 
-	imports := genLogicImports(route)
+	imports := genLogicImports(group, route)
 
 	var responseString string
 	var returnString string
 	var requestString string
 
 	if len(route.RequestTypeName()) > 0 {
-		groupNameParse := parseGroupName(typeGroup[route.RequestTypeName()], typesPacket, typesDir)
+		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)
 		requestString = "req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName()) + " ,"
 	}
 	// + svc context
 	requestString += "ctx *svc.ServiceContext"
 
 	if len(route.ResponseTypeName()) > 0 {
-		groupNameParse := parseGroupName(typeGroup[route.ResponseTypeName()], typesPacket, typesDir)
+		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)
 		responseString = "(resp " + groupNameParse.pkgName + "." + strings.Title(route.ResponseTypeName()) + ", err error)"
 		returnString = "return"
 	} else {
@@ -76,15 +76,15 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 	})
 }
 
-func genLogicImports(route spec.Route) string {
+func genLogicImports(group spec.Group, route spec.Route) string {
 	importSet := collection.NewSet()
 	if len(route.RequestTypeName()) > 0 {
-		groupNameParse := parseGroupName(typeGroup[route.RequestTypeName()], typesPacket, typesDir)
+		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)
 		importSet.AddStr(fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
 	}
 
 	if len(route.ResponseTypeName()) > 0 {
-		groupNameParse := parseGroupName(typeGroup[route.ResponseTypeName()], typesPacket, typesDir)
+		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)
 		importSet.AddStr(fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
 	}
 

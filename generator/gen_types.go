@@ -15,7 +15,6 @@ import (
 )
 
 var groupTypes []TypeBelongGroup
-var typeGroup = make(map[string]string)
 var requestTypes = make(map[string]int)
 
 const labelName = "label"
@@ -48,6 +47,7 @@ func GenTypes() error {
 			data: map[string]interface{}{
 				"pkgName": typeGroupInfo.pkgName,
 				"types":   t.TypeStr,
+				"rootPkg": RootPkg,
 			},
 		})
 		if err != nil {
@@ -86,26 +86,7 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 		}
 	}
 
-	// 用于保存 groupInfo 下包含几个 type， 如果一个 type 被多个 groupInfo 用到了，则放入公共的 type 文件中
-	// 如果一个 type 没有设定 groupInfo ，则也会放到 公共的 type 文件中
-	groupType := make(map[string]map[string]int)
-	for typeName, groups := range container {
-		_, ok := groups[""]
-		groupName := ""
-		if !ok && len(groups) == 1 {
-			for group := range groups {
-				groupName = group
-			}
-		}
-		_, ok = groupType[groupName]
-		if !ok {
-			groupType[groupName] = make(map[string]int)
-		}
-		groupType[groupName][typeName] = 1
-	}
-
-	// 包装返回
-	for group, typeNames := range groupType {
+	for group, typeNames := range container {
 		var temp []spec.Type
 		for _, t := range PluginInfo.Api.Types {
 			_, ok := typeNames[t.Name()]
@@ -123,17 +104,10 @@ func BuildGroupTypes() ([]TypeBelongGroup, error) {
 			TypeMap:   temp,
 		})
 	}
-
-	// 每个 type 对应的 groupInfo
-	for _, g := range groupTypes {
-		for _, s := range g.TypeMap {
-			typeGroup[s.Name()] = g.GroupName
-		}
-	}
-
 	return groupTypes, nil
 }
 
+// 将 group 对应几个的所有 type 组合起来
 func joinContainer(container map[string]map[string]int, defType spec.Type, group string, isRequestType bool) {
 	defineStruct, ok := defType.(spec.DefineStruct)
 	if !ok {
@@ -154,15 +128,15 @@ func joinContainer(container map[string]map[string]int, defType spec.Type, group
 	if typeName == "" {
 		return
 	}
-	_, ok = container[typeName]
+	_, ok = container[group]
 	if !ok {
-		container[typeName] = make(map[string]int, 0)
+		container[group] = make(map[string]int, 0)
 	} else {
-		if container[typeName][group] == 1 {
+		if container[group][typeName] == 1 {
 			return
 		}
 	}
-	container[typeName][group] = 1
+	container[group][typeName] = 1
 
 	members := defineStruct.Members
 	for _, m := range members {

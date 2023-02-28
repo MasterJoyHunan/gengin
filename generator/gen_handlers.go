@@ -37,7 +37,7 @@ func genHandler(group spec.Group, route spec.Route) error {
 	// 根据请求体找到对应的group
 	alias := ""
 	if len(route.RequestTypeName()) > 0 {
-		typeGroupNameParse := parseGroupName(typeGroup[route.RequestTypeName()], typesDir, typesPacket)
+		typeGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesDir, typesPacket)
 		alias = getTypesUseAlias(typeGroupNameParse)
 	}
 
@@ -77,7 +77,7 @@ func genHandlerImports(group spec.Group, route spec.Route) string {
 
 	// handler 需要找 types, type 有可能需要 alias
 	if len(route.RequestTypeName()) > 0 {
-		groupNameParse = parseGroupName(typeGroup[route.RequestTypeName()], typesPacket, typesPacket)
+		groupNameParse = parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesPacket)
 		alias := getTypesImportAlias(groupNameParse)
 		imports = append(imports, fmt.Sprintf("%s\"%s\"",
 			alias, pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
