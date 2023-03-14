@@ -49,7 +49,7 @@ func GenRoutes() error {
 		os.Remove(filename)
 
 		for i := range g.middlewares {
-			g.middlewares[i] = middlewarePacket + "." + strings.TrimSuffix(g.middlewares[i], "Middleware") + "Middleware"
+			g.middlewares[i] = middlewarePacket + "." + strings.TrimSuffix(util.Title(g.middlewares[i]), "Middleware") + "Middleware"
 		}
 
 		err = genFile(fileGenConfig{

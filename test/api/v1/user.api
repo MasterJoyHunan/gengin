@@ -39,7 +39,7 @@ type Value1 {
 @server(
 	jwt: Auth
 	group: user
-	middleware: SomeMiddleware
+	middleware: someMiddleware
 	prefix: /v1
 	swtags: "用户相关"
 )

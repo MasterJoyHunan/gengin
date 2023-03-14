@@ -44,7 +44,7 @@ go get -u github.com/zeromicro/go-zero/tools/goctl
 ```
 go 1.16 及以上使用
 ```sh
-go install github.com/zeromicro/go-zero/tools/goctl@v1.3.8
+go install github.com/zeromicro/go-zero/tools/goctl@v1.3.9
 ```
 
 再安装本项目，作为 go-zero 的插件
