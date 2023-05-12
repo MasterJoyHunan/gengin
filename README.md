@@ -178,6 +178,10 @@ you-app.go        # 如果文件已存在，不会重新生成
 
 再次感谢 [go-zero](https://github.com/zeromicro/go-zero)
 
+### 最佳实践
+
+[go-admin-template](https://github.com/topology-zero/go-admin-template)
+
 ### 协议
 
 [MIT](https://github.com/MasterJoyHunan/gengin/blob/master/LICENSE)
