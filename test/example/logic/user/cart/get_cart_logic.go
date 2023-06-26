@@ -6,7 +6,7 @@ import (
 )
 
 // GetCart 获取购物车信息
-func GetCart(req *cart.CartRequest, ctx *svc.ServiceContext) (resp cart.CartResponse, err error) {
+func GetCart(ctx *svc.ServiceContext, req *cart.CartRequest) (resp cart.CartResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

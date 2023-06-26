@@ -38,14 +38,12 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 
 	var responseString string
 	var returnString string
-	var requestString string
+	requestString := "ctx *svc.ServiceContext"
 
 	if len(route.RequestTypeName()) > 0 {
 		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)
-		requestString = "req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName()) + " ,"
+		requestString += ", req *" + groupNameParse.pkgName + "." + strings.Title(route.RequestTypeName())
 	}
-	// + svc context
-	requestString += "ctx *svc.ServiceContext"
 
 	if len(route.ResponseTypeName()) > 0 {
 		groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesDir)

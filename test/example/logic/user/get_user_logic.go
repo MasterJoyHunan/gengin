@@ -6,7 +6,7 @@ import (
 )
 
 // GetUser 获取用户信息
-func GetUser(req *user.UserRequest, ctx *svc.ServiceContext) (resp user.UserResponse, err error) {
+func GetUser(ctx *svc.ServiceContext, req *user.UserRequest) (resp user.UserResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

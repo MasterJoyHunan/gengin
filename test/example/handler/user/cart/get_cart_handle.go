@@ -16,7 +16,6 @@ func GetCartHandle(c *gin.Context) {
 		response.HandleResponse(c, nil, err)
 		return
 	}
-
-	resp, err := cart.GetCart(&req, svc.NewServiceContext(c))
+	resp, err := cart.GetCart(svc.NewServiceContext(c), &req)
 	response.HandleResponse(c, resp, err)
 }

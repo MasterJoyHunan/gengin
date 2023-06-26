@@ -20,7 +20,6 @@ func GetUserHandle(c *gin.Context) {
 		response.HandleResponse(c, nil, err)
 		return
 	}
-
-	resp, err := user.GetUser(&req, svc.NewServiceContext(c))
+	resp, err := user.GetUser(svc.NewServiceContext(c), &req)
 	response.HandleResponse(c, resp, err)
 }

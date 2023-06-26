@@ -6,7 +6,7 @@ import (
 )
 
 // AddUser 添加用户信息
-func AddUser(req *user.UserRequest, ctx *svc.ServiceContext) (resp user.UserResponse, err error) {
+func AddUser(ctx *svc.ServiceContext, req *user.UserRequest) (resp user.UserResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

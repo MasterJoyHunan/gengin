@@ -16,7 +16,6 @@ func EditBookHandle(c *gin.Context) {
 		response.HandleResponse(c, nil, err)
 		return
 	}
-
-	resp, err := book.EditBook(&req, svc.NewServiceContext(c))
+	resp, err := book.EditBook(svc.NewServiceContext(c), &req)
 	response.HandleResponse(c, resp, err)
 }

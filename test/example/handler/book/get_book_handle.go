@@ -16,7 +16,6 @@ func GetBookHandle(c *gin.Context) {
 		response.HandleResponse(c, nil, err)
 		return
 	}
-
-	resp, err := book.GetBook(&req, svc.NewServiceContext(c))
+	resp, err := book.GetBook(svc.NewServiceContext(c), &req)
 	response.HandleResponse(c, resp, err)
 }
