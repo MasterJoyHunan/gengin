@@ -20,10 +20,6 @@ func GenMain() error {
 		return err
 	}
 
-	if strings.HasSuffix(filename, "-api") {
-		filename = strings.ReplaceAll(filename, "-api", "")
-	}
-
 	return genFile(fileGenConfig{
 		dir:             PluginInfo.Dir,
 		subDir:          "",
