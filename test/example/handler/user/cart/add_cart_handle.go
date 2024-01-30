@@ -16,6 +16,10 @@ func AddCartHandle(c *gin.Context) {
 		response.HandleResponse(c, nil, err)
 		return
 	}
+	if err := c.ShouldBindUri(&req); err != nil {
+		response.HandleResponse(c, nil, err)
+		return
+	}
 	resp, err := cart.AddCart(svc.NewServiceContext(c), &req)
 	response.HandleResponse(c, resp, err)
 }

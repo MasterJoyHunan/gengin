@@ -56,6 +56,14 @@ func (p *ParseRequestBody) hasTag(i spec.DefineStruct, needTag string) bool {
 		if found && strings.HasSuffix(before, needTag) {
 			return true
 		}
+
+		// 进行内嵌处理
+		memberType, ok := m.Type.(spec.DefineStruct)
+		if ok {
+			if p.hasTag(memberType, needTag) {
+				return true
+			}
+		}
 	}
 	return false
 }

@@ -1,6 +1,8 @@
 syntax = "v1"
 
 type cartRequest struct {
+    PathId // pathid
+    Eebed666
     Name string `json:"name"` // 姓名
     Age int `json:"age"`      // 年龄
 }
@@ -11,7 +13,14 @@ type cartResponse struct {
     Age int `json:"age"`      // 年龄
 }
 
+type PathId struct {
+    Id int `path:"id"`
+}
 
+type Eebed666 struct {
+    Id int `path:"id"`
+    Eebed666
+}
 
 @server(
     jwt: Auth
