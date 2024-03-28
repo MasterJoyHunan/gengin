@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/MasterJoyHunan/gengin/tpl"
 
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
@@ -17,7 +17,7 @@ const (
 )
 
 func GenEtc() error {
-	filename, err := format.FileNamingFormat(PluginInfo.Style, PluginInfo.Api.Service.Name)
+	filename, err := format.FileNamingFormat(fileNameStyle, prepare.ApiSpec.Service.Name)
 	if err != nil {
 		return err
 	}
@@ -25,18 +25,16 @@ func GenEtc() error {
 	mode := strings.Split(devModel, "|")
 
 	for _, m := range mode {
-		err = genFile(fileGenConfig{
-			dir:             PluginInfo.Dir,
-			subDir:          etcDir,
-			filename:        fmt.Sprintf("%s-%s.yaml", filename, m),
-			templateName:    "etcTemplate",
-			builtinTemplate: tpl.EtcTemplate,
-			data: map[string]interface{}{
-				"serviceName": PluginInfo.Api.Service.Name,
+		err = GenFile(
+			fmt.Sprintf("%s-%s.yaml", filename, m),
+			tpl.EtcTemplate,
+			WithSubDir("etc"),
+			WithData(map[string]any{
+				"serviceName": prepare.ApiSpec.Service.Name,
 				"host":        defaultHost,
 				"port":        defaultPort,
-			},
-		})
+			}),
+		)
 		if err != nil {
 			return err
 		}

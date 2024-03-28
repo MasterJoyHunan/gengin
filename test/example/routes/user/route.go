@@ -15,5 +15,4 @@ func RegisterUserRoute(e *gin.Engine) {
 	g.GET("/user/:id", user.GetUserHandle)
 	g.POST("/user", user.AddUserHandle)
 	g.PUT("/user/:id", user.EditUserHandle)
-
 }

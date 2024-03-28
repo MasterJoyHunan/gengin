@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"net/http"
 
-	{{.importPkg}}
+	"{{.rootPkg}}/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,11 +19,16 @@ func init() {
 func main() {
 	flag.Parse()
 
-	// configFile := fmt.Sprintf("{{.etcDir}}/{{.configName}}-%s.yaml", release)
+	// configFile := fmt.Sprintf("etc/{{.configName}}-%s.yaml", release)
 
-    {{.ginEngineName}} := gin.Default()
+    e := gin.Default()
 
-	{{.setup}}
+	routes.Setup(e)
 
-	{{.ginEngineName}}.Run("{{.host}}:{{.port}}")
+	server := http.Server{
+		Addr:    fmt.Sprintf("%s:%d", "{{.host}}", {{.port}}),
+		Handler: e,
+	}
+
+	server.ListenAndServe()
 }

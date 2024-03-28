@@ -1,27 +1,9 @@
 package main
 
 import (
-	"github.com/MasterJoyHunan/gengin/generator"
-	"github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/cmd"
 )
 
 func main() {
-	prepare.Setup()
-	Must(generator.GenEtc())
-	Must(generator.GenConfig())
-	Must(generator.GenMain())
-	Must(generator.GenMiddleware())
-	Must(generator.GenTypes())
-	Must(generator.GenLogic())
-	Must(generator.GenRoutes())
-	Must(generator.GenHandlers())
-	Must(generator.GenResponse())
-	Must(generator.GenI18N())
-	Must(generator.GenSvcContext())
-}
-
-func Must(err error) {
-	if err != nil {
-		panic(err)
-	}
+	cmd.Execute()
 }

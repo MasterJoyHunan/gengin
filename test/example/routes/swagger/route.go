@@ -10,5 +10,4 @@ import (
 func RegisterSwaggerRoute(e *gin.Engine) {
 	g := e.Group("")
 	g.GET("/swagger", swagger.SwaggerHandle)
-
 }

@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"net/http"
 
 	"github.com/MasterJoyHunan/gengin/test/example/routes"
 
@@ -23,5 +25,10 @@ func main() {
 
 	routes.Setup(e)
 
-	e.Run("127.0.0.1:8888")
+	server := http.Server{
+		Addr:    fmt.Sprintf("%s:%d", "127.0.0.1", 8888),
+		Handler: e,
+	}
+
+	server.ListenAndServe()
 }

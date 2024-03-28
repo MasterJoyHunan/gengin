@@ -1,12 +1,13 @@
 package {{.pkgName}}
 
-{{if .hasImport}}import (
-	{{.imports}}
-){{end}}
+import (
+	"{{.rootPkg}}/svc"
+	{{if or .hasResp .hasResp}}"{{.rootPkg}}/types"{{end}}
+)
 
-// {{.function}} {{.comment}}
-func {{.function}}({{.request}}) {{.responseType}} {
+// {{.logicName}} {{.comment}}
+func {{.logicName}}(ctx *svc.ServiceContext{{if .hasReq}}, req *types.{{.requestType}}{{end}}) {{if .hasResp}}(resp types.{{.responseType}}, err error){{else}}error{{end}} {
 	// todo: add your logic here and delete this line
 
-	{{.returnString}}
+	{{if .hasResp}}return{{else}}return nil{{end}}
 }

@@ -15,5 +15,4 @@ func RegisterUserCartRoute(e *gin.Engine) {
 	g.GET("/cart/:id", cart.GetCartHandle)
 	g.POST("/cart", cart.AddCartHandle)
 	g.PUT("/cart/:id", cart.EditCartHandle)
-
 }

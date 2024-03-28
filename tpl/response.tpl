@@ -1,7 +1,7 @@
 package response
 
 import (
-    {{.importPkg}}
+    "{{.rootPkg}}/internal/translator"
 
     "github.com/gin-gonic/gin"
 )

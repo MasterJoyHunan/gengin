@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	. "github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/MasterJoyHunan/gengin/tpl"
 
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
@@ -14,54 +14,49 @@ import (
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
-var groupTypes []TypeBelongGroup
-var requestTypes = make(map[string]int)
-
 const labelName = "label"
 
-type TypeBelongGroup struct {
-	GroupName string
-	TypeStr   string
-	TypeMap   []spec.Type
-}
+var requestTypes map[string]any
 
 func GenTypes() error {
-	types, err := BuildGroupTypes()
+	requestTypes = getRequestTypes()
+	types, err := buildTypes()
 	if err != nil {
 		return err
 	}
 
-	typeFilename := typesPacket + ".go"
+	filename := pathx.JoinPackages(prepare.OutputDir, "types/types.go")
+	os.Remove(filename)
 
-	for _, t := range types {
-		typeGroupInfo := parseGroupName(t.GroupName, typesDir, typesPacket)
-		filename := pathx.JoinPackages(PluginInfo.Dir, typeGroupInfo.dirPath, typeFilename)
-		os.Remove(filename)
-
-		err = genFile(fileGenConfig{
-			dir:             PluginInfo.Dir,
-			subDir:          typeGroupInfo.dirPath,
-			filename:        typeFilename,
-			templateName:    "typesTemplate",
-			builtinTemplate: tpl.TypesTemplate,
-			data: map[string]interface{}{
-				"pkgName": typeGroupInfo.pkgName,
-				"types":   t.TypeStr,
-				"rootPkg": RootPkg,
-			},
-		})
-		if err != nil {
-			return err
-		}
+	err = GenFile(
+		"types.go",
+		tpl.TypesTemplate,
+		WithSubDir("types"),
+		WithData(map[string]any{
+			"types": types,
+		}),
+	)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
+func getRequestTypes() map[string]any {
+	types := make(map[string]any)
+	for _, group := range prepare.ApiSpec.Service.Groups {
+		for _, r := range group.Routes {
+			types[r.RequestTypeName()] = nil
+		}
+	}
+	return types
+}
+
 // buildTypes gen types to string
-func buildTypes(types []spec.Type) (string, error) {
+func buildTypes() (string, error) {
 	var builder strings.Builder
 	first := true
-	for _, tp := range types {
+	for _, tp := range prepare.ApiSpec.Types {
 		if first {
 			first = false
 		} else {
@@ -73,82 +68,6 @@ func buildTypes(types []spec.Type) (string, error) {
 	}
 
 	return builder.String(), nil
-}
-
-// BuildGroupTypes gen types to string
-func BuildGroupTypes() ([]TypeBelongGroup, error) {
-	// 用于保存 type 被哪几个 groupInfo 用到
-	container := make(map[string]map[string]int, 0)
-	for _, group := range PluginInfo.Api.Service.Groups {
-		for _, route := range group.Routes {
-			joinContainer(container, route.RequestType, group.GetAnnotation(groupProperty), true)
-			joinContainer(container, route.ResponseType, group.GetAnnotation(groupProperty), false)
-		}
-	}
-
-	for group, typeNames := range container {
-		var temp []spec.Type
-		for _, t := range PluginInfo.Api.Types {
-			_, ok := typeNames[t.Name()]
-			if ok {
-				temp = append(temp, t)
-			}
-		}
-		typeStr, err := buildTypes(temp)
-		if err != nil {
-			return nil, err
-		}
-		groupTypes = append(groupTypes, TypeBelongGroup{
-			GroupName: group,
-			TypeStr:   typeStr,
-			TypeMap:   temp,
-		})
-	}
-	return groupTypes, nil
-}
-
-// 将 group 对应几个的所有 type 组合起来
-func joinContainer(container map[string]map[string]int, defType spec.Type, group string, isRequestType bool) {
-	defineStruct, ok := defType.(spec.DefineStruct)
-	if !ok {
-		return
-	}
-	for _, t := range PluginInfo.Api.Types {
-		if t.Name() == defType.Name() {
-			defineStruct = t.(spec.DefineStruct)
-		}
-	}
-
-	typeName := defineStruct.Name()
-
-	if isRequestType {
-		requestTypes[typeName] = 1
-	}
-
-	if typeName == "" {
-		return
-	}
-	_, ok = container[group]
-	if !ok {
-		container[group] = make(map[string]int, 0)
-	} else {
-		if container[group][typeName] == 1 {
-			return
-		}
-	}
-	container[group][typeName] = 1
-
-	members := defineStruct.Members
-	for _, m := range members {
-		switch v := m.Type.(type) {
-		case spec.MapType:
-			joinContainer(container, v.Value, group, isRequestType)
-		case spec.ArrayType:
-			joinContainer(container, v.Value, group, isRequestType)
-		case spec.DefineStruct:
-			joinContainer(container, m.Type, group, isRequestType)
-		}
-	}
 }
 
 func writeType(writer io.Writer, tp spec.Type) error {

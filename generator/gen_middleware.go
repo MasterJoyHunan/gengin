@@ -3,34 +3,34 @@ package generator
 import (
 	"strings"
 
-	. "github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/MasterJoyHunan/gengin/tpl"
+	"github.com/samber/lo"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 
-	"github.com/zeromicro/go-zero/core/collection"
-	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
 )
 
 func GenMiddleware() error {
-	middlewares := getMiddleware()
+	middlewares := getMiddlewares()
 	for _, item := range middlewares {
-		preFilename, err := format.FileNamingFormat(PluginInfo.Style, item)
+		middlewareName, err := format.FileNamingFormat(fileNameStyle, item)
 		if err != nil {
 			return err
 		}
-		filename := strings.TrimSuffix(strings.TrimSuffix(strings.ToLower(preFilename), "_middleware"), "middleware") + "_middleware"
+		filename := strings.TrimSuffix(strings.TrimSuffix(strings.ToLower(middlewareName), "middleware"), "_") + "_middleware"
 
 		name := strings.TrimSuffix(item, "Middleware") + "Middleware"
-		err = genFile(fileGenConfig{
-			dir:             PluginInfo.Dir,
-			subDir:          middlewareDir,
-			filename:        filename + ".go",
-			templateName:    "contextTemplate",
-			builtinTemplate: tpl.MiddlewareTemplate,
-			data: map[string]string{
-				"name": util.Title(name),
-			},
-		})
+
+		err = GenFile(
+			filename+".go",
+			tpl.MiddlewareTemplate,
+			WithSubDir("middleware"),
+			WithData(map[string]string{
+				"name": cases.Title(language.English, cases.NoLower).String(name),
+			}),
+		)
 		if err != nil {
 			return err
 		}
@@ -39,20 +39,20 @@ func GenMiddleware() error {
 	return nil
 }
 
-func getMiddleware() []string {
-	result := collection.NewSet()
-	for _, g := range PluginInfo.Api.Service.Groups {
+func getMiddlewares() []string {
+	middlewares := make(map[string]any)
+	for _, g := range prepare.ApiSpec.Service.Groups {
 		middleware := g.GetAnnotation("middleware")
 		if len(middleware) > 0 {
 			for _, item := range strings.Split(middleware, ",") {
-				result.Add(strings.TrimSpace(item))
+				middlewares[strings.TrimSpace(item)] = nil
 			}
 		}
 		jwtMiddleware := g.GetAnnotation("jwt")
 		if len(jwtMiddleware) > 0 {
-			result.Add(strings.TrimSpace(jwtMiddleware))
+			middlewares[strings.TrimSpace(jwtMiddleware)] = nil
 		}
 	}
 
-	return result.KeysStr()
+	return lo.Keys(middlewares)
 }

@@ -2,11 +2,11 @@ package user
 
 import (
 	"github.com/MasterJoyHunan/gengin/test/example/svc"
-	"github.com/MasterJoyHunan/gengin/test/example/types/user"
+	"github.com/MasterJoyHunan/gengin/test/example/types"
 )
 
 // GetUser 获取用户信息
-func GetUser(ctx *svc.ServiceContext, req *user.UserRequest) (resp user.UserResponse, err error) {
+func GetUser(ctx *svc.ServiceContext, req *types.UserRequest) (resp types.UserRequest, err error) {
 	// todo: add your logic here and delete this line
 
 	return

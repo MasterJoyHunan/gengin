@@ -1,4 +1,4 @@
-package {{.pkgName}}
+package config
 
 type Server struct {
     Name string

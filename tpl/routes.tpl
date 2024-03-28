@@ -2,13 +2,16 @@
 package {{.pkgName}}
 
 import (
-    {{.importPackages}}
+    "{{.rootPkg}}/{{.handlePkg}}"
+    {{if .hasMiddleware}}"{{.rootPkg}}/middleware"{{end}}
 
 	"github.com/gin-gonic/gin"
 )
 
-func Register{{.function}}Route(e *gin.Engine) {
+func Register{{.funcName}}Route(e *gin.Engine) {
     g := e.Group("{{if .hasPrefix}}{{.prefix}}{{end}}"){{if .hasMiddleware}}
-    g.Use({{.middleware}}){{end}}
-    {{.routesAdditions}}
+    g.Use({{range .middleware}}middleware.{{.}}, {{end}}){{end}}
+    {{- range .routes}}
+    g.{{.method}}("{{.path}}", {{$.handleBase}}.{{.handle}}Handle)
+    {{- end}}
 }

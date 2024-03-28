@@ -4,26 +4,31 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/zeromicro/go-zero/tools/goctl/plugin"
+	"github.com/zeromicro/go-zero/tools/goctl/api/parser"
+	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
 	"github.com/zeromicro/go-zero/tools/goctl/util/ctx"
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
 var (
-	PluginInfo *plugin.Plugin
-	RootPkg    string
+	ApiSpec   *spec.ApiSpec
+	RootPkg   string
+	OutputDir string
+	ApiFile   string
 )
 
 func Setup() {
 	var err error
-	PluginInfo, err = plugin.NewPlugin()
+	ApiSpec, err = parser.Parse(ApiFile)
 	if err != nil {
 		panic(err)
 	}
-	if PluginInfo.Style == "" {
-		PluginInfo.Style = "go_zero"
+
+	if err = ApiSpec.Validate(); err != nil {
+		panic(err)
 	}
-	RootPkg, err = GetParentPackage(PluginInfo.Dir)
+
+	RootPkg, err = GetParentPackage(OutputDir)
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +45,6 @@ func GetParentPackage(dir string) (string, error) {
 		return "", err
 	}
 
-	// fix https://github.com/zeromicro/go-zero/issues/1058
 	wd := projectCtx.WorkDir
 	d := projectCtx.Dir
 	same, err := pathx.SameFile(wd, d)

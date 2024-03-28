@@ -15,5 +15,4 @@ func RegisterBookRoute(e *gin.Engine) {
 	g.GET("/book/:id", book.GetBookHandle)
 	g.POST("/book", book.AddBookHandle)
 	g.PUT("/book/:id", book.EditBookHandle)
-
 }

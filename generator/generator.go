@@ -3,24 +3,23 @@ package generator
 import (
 	"bytes"
 	goformat "go/format"
+	"os"
+	"path"
 	"strings"
 	"text/template"
 
-	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
-	"github.com/zeromicro/go-zero/tools/goctl/api/util"
-	"github.com/zeromicro/go-zero/tools/goctl/util/format"
-	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
 type (
 	fileGenConfig struct {
-		dir             string
-		subDir          string
-		filename        string
-		templateName    string
-		builtinTemplate string
-		data            interface{}
+		dir          string
+		subDir       string
+		filename     string
+		templateName string
+		templateText string
+		data         any
 	}
 
 	groupBase struct {
@@ -30,29 +29,74 @@ type (
 	}
 )
 
-func genFile(c fileGenConfig) error {
-	fp, created, err := util.MaybeCreateFile(c.dir, c.subDir, c.filename)
+func GenFile(fileName, templateText string, opt ...Option) error {
+	templateName, _, _ := strings.Cut(fileName, ".")
+
+	cfg := &fileGenConfig{
+		filename:     fileName,
+		templateName: templateName,
+		templateText: templateText,
+	}
+	for _, fn := range opt {
+		fn(cfg)
+	}
+
+	if len(cfg.dir) == 0 {
+		cfg.dir = prepare.OutputDir
+	}
+
+	filePath := path.Join(cfg.dir, cfg.subDir, cfg.filename)
+	_, err := os.Stat(filePath)
+	if err == nil {
+		// 文件已存在
+		return nil
+	}
+
+	err = os.MkdirAll(path.Join(cfg.dir, cfg.subDir), os.ModePerm)
 	if err != nil {
 		return err
 	}
-	if !created {
-		return nil
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
 	}
-	defer fp.Close()
+	defer file.Close()
 
-	// 暂时不支持自定义模板
-	text := c.builtinTemplate
-
-	t := template.Must(template.New(c.templateName).Parse(text))
+	t := template.Must(template.New(cfg.templateName).Parse(cfg.templateText))
 	buffer := new(bytes.Buffer)
-	err = t.Execute(buffer, c.data)
+	err = t.Execute(buffer, cfg.data)
 	if err != nil {
 		return err
 	}
 
 	code := formatCode(buffer.String())
-	_, err = fp.WriteString(code)
+	_, err = file.WriteString(code)
+
 	return err
+}
+
+type Option func(*fileGenConfig)
+
+// WithDir 设置目录
+func WithDir(dir string) Option {
+	return func(config *fileGenConfig) {
+		config.dir = dir
+	}
+}
+
+// WithSubDir 设置二级目录
+func WithSubDir(dir string) Option {
+	return func(config *fileGenConfig) {
+		config.subDir = dir
+	}
+}
+
+// WithData 设置数据
+func WithData(data any) Option {
+	return func(config *fileGenConfig) {
+		config.data = data
+	}
 }
 
 func formatCode(code string) string {
@@ -64,52 +108,7 @@ func formatCode(code string) string {
 	return string(ret)
 }
 
-// parseGroupName 解析 Group 所属的 subDir 和 pkgName
-func parseGroupName(groupName, defaultDir, defaultPkgName string) (i groupBase) {
-	if groupName == "" {
-		i.groupName = ""
-		i.dirPath = defaultDir
-		i.pkgName = defaultPkgName
-		return
-	}
-	fmtName, err := format.FileNamingFormat(dirFmt, groupName)
-	logx.Must(err)
 
-	i.groupName = groupName
-	i.dirPath = pathx.JoinPackages(defaultDir, fmtName)
-	i.pkgName = fmtName[strings.LastIndex(fmtName, "/")+1:]
-	return
-}
-
-func getHandlerBaseName(route spec.Route) string {
-	handler := route.Handler
-	handler = strings.TrimSpace(handler)
-	handler = strings.TrimSuffix(handler, "handler")
-	handler = strings.TrimSuffix(handler, "Handler")
-	return handler
-}
-
-func getLogicName(route spec.Route) string {
-	return getHandlerBaseName(route) + "Logic"
-}
-
-func getHandlerName(route spec.Route) string {
-	return getHandlerBaseName(route) + "Handle"
-}
-
-func getTypesImportAlias(pkg groupBase) string {
-	if pkg.dirPath == typesPacket {
-		return ""
-	}
-	return pkg.pkgName + typePkgAlias + " "
-}
-
-func getTypesUseAlias(pkg groupBase) string {
-	if pkg.dirPath == typesPacket {
-		return typesPacket + "."
-	}
-	return pkg.pkgName + typePkgAlias + "."
-}
 
 func parseComment(r spec.Route) string {
 	if r.AtDoc.Text != "" {

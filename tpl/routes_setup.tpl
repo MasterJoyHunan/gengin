@@ -2,11 +2,15 @@
 package routes
 
 import (
-    {{.importPackages}}
+    {{- range .routes}}
+    {{if not (eq .pkg "routes")}}"{{$.rootPkg}}/{{.pkg}}"{{end}}
+    {{- end}}
 
 	"github.com/gin-gonic/gin"
 )
 
 func Setup(e *gin.Engine) {
-    {{.register}}
+    {{- range .routes}}
+    {{if not (eq .base "routes")}}{{.base}}.{{end}}Register{{.name}}Route(e)
+    {{- end}}
 }

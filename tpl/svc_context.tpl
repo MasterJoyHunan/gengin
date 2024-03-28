@@ -1,4 +1,4 @@
-package {{.pkgName}}
+package svc
 
 import (
     "time"

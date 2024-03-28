@@ -7,22 +7,14 @@ import (
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
 )
 
-const req = "req"
-
 type ParseRequestBody struct{}
 
-func (p *ParseRequestBody) BuildParseRequestStr(requestName string, types []spec.Type) string {
-	if requestName == "" {
+func (p *ParseRequestBody) BuildParseRequestStr(requestType spec.Type) string {
+	if requestType == nil {
 		return ""
 	}
 	var sb strings.Builder
-	var structType spec.DefineStruct
-	for _, t := range types {
-		if t.Name() == requestName {
-			structType = t.(spec.DefineStruct)
-			break
-		}
-	}
+	structType := requestType.(spec.DefineStruct)
 	sb.WriteString(p.from(structType))
 	sb.WriteString(p.header(structType))
 	sb.WriteString(p.uri(structType))
@@ -61,8 +53,8 @@ func (p *ParseRequestBody) hasTag(i spec.DefineStruct, needTag string) bool {
 }
 
 func (p *ParseRequestBody) returnCode(method string) string {
-	return fmt.Sprintf(`    if err := c.%s(&%s); err != nil {
+	return fmt.Sprintf(`    if err := c.%s(&req); err != nil {
 		response.HandleResponse(c, nil, err)
 		return
-	}`, method, req) + "\n"
+	}`, method) + "\n"
 }

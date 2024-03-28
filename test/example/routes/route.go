@@ -10,5 +10,4 @@ import (
 func RegisterRoute(e *gin.Engine) {
 	g := e.Group("")
 	g.GET("/ping", handler.PingHandle)
-
 }

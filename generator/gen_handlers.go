@@ -1,23 +1,23 @@
 package generator
 
 import (
-	"fmt"
+	"path"
 	"strings"
 
 	"github.com/MasterJoyHunan/gengin/pkg"
-	. "github.com/MasterJoyHunan/gengin/prepare"
+	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/MasterJoyHunan/gengin/tpl"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
-	"github.com/zeromicro/go-zero/tools/goctl/util"
 	"github.com/zeromicro/go-zero/tools/goctl/util/format"
-	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
 func GenHandlers() error {
-	for _, group := range PluginInfo.Api.Service.Groups {
-		for _, route := range group.Routes {
-			if err := genHandler(group, route); err != nil {
+	for _, group := range prepare.ApiSpec.Service.Groups {
+		for _, r := range group.Routes {
+			if err := genHandler(group, r); err != nil {
 				return err
 			}
 		}
@@ -26,66 +26,44 @@ func GenHandlers() error {
 }
 
 func genHandler(group spec.Group, route spec.Route) error {
-	handler := getHandlerName(route)
-	logicGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), logicDir, logicPacket)
-	handlerGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), handlerDir, handlerPacket)
-
-	// 解析请求
-	p := new(pkg.ParseRequestBody)
-	parseRequest := p.BuildParseRequestStr(route.RequestTypeName(), PluginInfo.Api.Types)
-
-	// 根据请求体找到对应的group
-	alias := ""
-	if len(route.RequestTypeName()) > 0 {
-		typeGroupNameParse := parseGroupName(group.GetAnnotation(groupProperty), typesDir, typesPacket)
-		alias = getTypesUseAlias(typeGroupNameParse)
-	}
-
-	filename, err := format.FileNamingFormat(PluginInfo.Style, handler)
+	handlerName, err := format.FileNamingFormat(fileNameStyle, route.Handler)
 	if err != nil {
 		return err
 	}
 
-	logic := getLogicName(route)
-	return genFile(fileGenConfig{
-		dir:             PluginInfo.Dir,
-		subDir:          handlerGroupNameParse.dirPath,
-		filename:        filename + ".go",
-		templateName:    "handlerTemplate",
-		builtinTemplate: tpl.HandlerTemplate,
-		data: map[string]interface{}{
-			"comment":        parseComment(route),
-			"pkgName":        handlerGroupNameParse.pkgName,
-			"importPackages": genHandlerImports(group, route),
-			"handlerName":    util.Title(handler),
-			"requestType":    alias + util.Title(route.RequestTypeName()),
-			"logicCall":      logicGroupNameParse.pkgName + "." + util.Title(strings.TrimSuffix(logic, "Logic")),
-			"hasResp":        len(route.ResponseTypeName()) > 0,
-			"hasRequest":     len(route.RequestTypeName()) > 0,
-			"parseRequest":   parseRequest,
-		},
-	})
-}
+	handlerFileName := strings.TrimRight(strings.TrimRight(handlerName, "handle"), "_") + "_handle.go"
 
-func genHandlerImports(group spec.Group, route spec.Route) string {
-	var imports []string
-
-	// handler 需要找 logic
-	groupNameParse := parseGroupName(group.GetAnnotation(groupProperty), logicDir, logicPacket)
-	imports = append(imports, fmt.Sprintf("\"%s\"",
-		pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
-
-	// handler 需要找 types, type 有可能需要 alias
-	if len(route.RequestTypeName()) > 0 {
-		groupNameParse = parseGroupName(group.GetAnnotation(groupProperty), typesPacket, typesPacket)
-		alias := getTypesImportAlias(groupNameParse)
-		imports = append(imports, fmt.Sprintf("%s\"%s\"",
-			alias, pathx.JoinPackages(RootPkg, groupNameParse.dirPath)))
+	subDir := group.GetAnnotation(groupProperty)
+	subDir, err = format.FileNamingFormat(dirStyle, subDir)
+	if err != nil {
+		return err
 	}
 
-	// handler 需要统一返回处理
-	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, responseDir)))
-	imports = append(imports, fmt.Sprintf("\"%s\"", pathx.JoinPackages(RootPkg, "svc")))
+	handlePkg := path.Join("handler", subDir)
+	logicPkg := path.Join("logic", subDir)
 
-	return strings.Join(imports, "\n\t")
+	handleBase := path.Base(handlePkg)
+	logicBase := path.Base(logicPkg)
+
+	// 解析请求
+	p := new(pkg.ParseRequestBody)
+	parseRequest := p.BuildParseRequestStr(route.RequestType)
+
+	return GenFile(
+		handlerFileName,
+		tpl.HandlerTemplate,
+		WithSubDir(handlePkg),
+		WithData(map[string]any{
+			"rootPkg":      prepare.RootPkg,
+			"pkgName":      handleBase,
+			"logicPkg":     logicPkg,
+			"logicBase":    logicBase,
+			"comment":      parseComment(route),
+			"handlerName":  cases.Title(language.English, cases.NoLower).String(route.Handler),
+			"requestType":  cases.Title(language.English, cases.NoLower).String(route.RequestTypeName()),
+			"hasResp":      len(route.ResponseTypeName()) > 0,
+			"hasReq":       len(route.RequestTypeName()) > 0,
+			"parseRequest": parseRequest,
+		}),
+	)
 }
