@@ -15,20 +15,6 @@ import (
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
 )
 
-type (
-	groupInfo struct {
-		routes      []route
-		middlewares []string
-		prefix      string
-		groupBase
-	}
-	route struct {
-		method  string
-		path    string
-		handler string
-	}
-)
-
 func GenRoutes() error {
 	for _, group := range prepare.ApiSpec.Service.Groups {
 		subDir := group.GetAnnotation(groupProperty)

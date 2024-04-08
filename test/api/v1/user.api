@@ -1,47 +1,47 @@
 syntax = "v1"
 
 type userRequest {
-	Name string `path:"name"` // 姓名
-	Age  int    `json:"age"`
-	embed1 []Embed1 `json:"em1"` // xs
-	embed2 Embed2 `json:"em2"` // dsd
-	map2 map[string]Value1 `json:"map2"`
+    Name string `path:"name"`    // 姓名
+    Age int `json:"age"`
+    embed1 []Embed1 `json:"em1"` // xs
+    embed2 Embed2 `json:"em2"`   // dsd
+    map2 map[string]Value1 `json:"map2"`
 }
 
 type userResponse {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	embed1 []Embed1 `json:"em1"`
-	embed2 Embed2 `json:"em2"`
-	map1 map[string]string `json:"map1"` // test 
-	map2 map[string]Value1 `json:"map2"`
+    Code int `json:"code"`
+    Msg string `json:"msg"`
+    embed1 []Embed1 `json:"em1"`
+    embed2 Embed2 `json:"em2"`
+    map1 map[string]string `json:"map1"` // test
+    map2 map[string]Value1 `json:"map2"`
 }
 
 type Embed1 {
-	foo int `json:"foo"` // x
-	Embed3 Embed3 `json:"embed3"` // esc234
+    foo int `json:"foo"`          // x
+    Embed3 Embed3 `json:"embed3"` // esc234
 }
 type Embed2 {
-	foo int `json:"foo"` // y
+    foo int `json:"foo"` // y
 }
 
 type Embed3 {
-	foo int `json:"foo"` // Embed3
+    foo int `json:"foo"` // Embed3
 }
 
 
 
 type Value1 {
-	name string `json:"name"` // vads3
+    name string `json:"name"` // vads3
 }
 
 
 @server(
-	jwt: Auth
-	group: user
-	middleware: someMiddleware
-	prefix: /v1
-	swtags: "用户相关"
+    jwt: Auth
+    group: user
+    middleware: someMiddleware
+    prefix: /v1
+    swtags: "用户相关"
 )
 
 

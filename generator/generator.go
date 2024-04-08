@@ -10,24 +10,18 @@ import (
 
 	"github.com/MasterJoyHunan/gengin/prepare"
 	"github.com/zeromicro/go-zero/tools/goctl/api/spec"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
-type (
-	fileGenConfig struct {
-		dir          string
-		subDir       string
-		filename     string
-		templateName string
-		templateText string
-		data         any
-	}
-
-	groupBase struct {
-		groupName string
-		dirPath   string
-		pkgName   string
-	}
-)
+type fileGenConfig struct {
+	dir          string
+	subDir       string
+	filename     string
+	templateName string
+	templateText string
+	data         any
+}
 
 func GenFile(fileName, templateText string, opt ...Option) error {
 	templateName, _, _ := strings.Cut(fileName, ".")
@@ -108,8 +102,6 @@ func formatCode(code string) string {
 	return string(ret)
 }
 
-
-
 func parseComment(r spec.Route) string {
 	if r.AtDoc.Text != "" {
 		return strings.Trim(r.AtDoc.Text, "\"")
@@ -122,4 +114,26 @@ func parseComment(r spec.Route) string {
 		return str
 	}
 	return ""
+}
+
+func parseResponseType(t spec.Type) (isPrimitiveType bool, typeName string) {
+	if t == nil {
+		return true, ""
+	}
+	switch v := t.(type) {
+	case spec.DefineStruct:
+		return false, "types." + cases.Title(language.English, cases.NoLower).String(t.Name())
+	case spec.PrimitiveType: // 内置
+		return true, t.Name()
+	case spec.MapType:
+		// 不允许
+	case spec.ArrayType:
+		isPrimitiveType, typeName = parseResponseType(v.Value)
+		return isPrimitiveType, "[]" + typeName
+	case spec.InterfaceType:
+		// 不允许
+	case spec.PointerType:
+		// 不允许
+	}
+	return true, ""
 }

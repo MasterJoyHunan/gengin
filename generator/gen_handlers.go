@@ -31,7 +31,7 @@ func genHandler(group spec.Group, route spec.Route) error {
 		return err
 	}
 
-	handlerFileName := strings.TrimRight(strings.TrimRight(handlerName, "handle"), "_") + "_handle.go"
+	handlerFileName := strings.TrimSuffix(strings.TrimSuffix(handlerName, "handle"), "_") + "_handle.go"
 
 	subDir := group.GetAnnotation(groupProperty)
 	subDir, err = format.FileNamingFormat(dirStyle, subDir)

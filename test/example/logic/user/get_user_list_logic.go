@@ -6,7 +6,7 @@ import (
 )
 
 // GetUserList 获取所有用户信息
-func GetUserList(ctx *svc.ServiceContext, req *types.UserRequest) (resp types.UserRequest, err error) {
+func GetUserList(ctx *svc.ServiceContext, req *types.UserRequest) (resp types.UserResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

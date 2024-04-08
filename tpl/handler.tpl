@@ -1,7 +1,7 @@
 package {{.pkgName}}
 
 import (
-    {{if .hasResp}}"{{.rootPkg}}/types"{{end}}
+    {{if .hasReq}}"{{.rootPkg}}/types"{{end}}
     "{{.rootPkg}}/{{.logicPkg}}"
     "{{.rootPkg}}/svc"
     "{{.rootPkg}}/internal/response"

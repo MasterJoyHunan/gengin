@@ -31,7 +31,7 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 		return err
 	}
 
-	logicFileName := strings.TrimRight(strings.TrimRight(logicName, "logic"), "_") + "_logic.go"
+	logicFileName := strings.TrimSuffix(strings.TrimSuffix(logicName, "logic"), "_") + "_logic.go"
 
 	subDir := group.GetAnnotation(groupProperty)
 	subDir, err = format.FileNamingFormat(dirStyle, subDir)
@@ -42,19 +42,22 @@ func genLogicByRoute(group spec.Group, route spec.Route) error {
 	logicPkg := path.Join("logic", subDir)
 	logicBase := path.Base(logicPkg)
 
+	respIsPrimitiveType, respTypeName := parseResponseType(route.ResponseType)
+
 	return GenFile(
 		logicFileName,
 		tpl.LogicTemplate,
 		WithSubDir(logicPkg),
 		WithData(map[string]any{
-			"rootPkg":      prepare.RootPkg,
-			"pkgName":      logicBase,
-			"comment":      parseComment(route),
-			"logicName":    cases.Title(language.English, cases.NoLower).String(route.Handler),
-			"requestType":  cases.Title(language.English, cases.NoLower).String(route.RequestTypeName()),
-			"responseType": cases.Title(language.English, cases.NoLower).String(route.RequestTypeName()),
-			"hasReq":       len(route.RequestTypeName()) > 0,
-			"hasResp":      len(route.ResponseTypeName()) > 0,
+			"rootPkg":           prepare.RootPkg,
+			"pkgName":           logicBase,
+			"comment":           parseComment(route),
+			"logicName":         cases.Title(language.English, cases.NoLower).String(route.Handler),
+			"requestType":       cases.Title(language.English, cases.NoLower).String(route.RequestTypeName()),
+			"responseType":      respTypeName,
+			"needImportTypePkg": len(route.RequestTypeName()) > 0 || (!respIsPrimitiveType && len(route.ResponseTypeName()) > 0),
+			"hasReq":            len(route.RequestTypeName()) > 0,
+			"hasResp":           len(route.ResponseTypeName()) > 0,
 		}),
 	)
 }

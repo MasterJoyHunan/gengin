@@ -6,7 +6,7 @@ import (
 )
 
 // GetBookList 获取所有书本信息
-func GetBookList(ctx *svc.ServiceContext, req *types.BookRequest) (resp types.BookRequest, err error) {
+func GetBookList(ctx *svc.ServiceContext, req *types.BookRequest) (resp types.BookResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return
