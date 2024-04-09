@@ -61,7 +61,7 @@ func GenRoutes() error {
 		}
 
 		err = GenFile(
-			"route.go",
+			"routes.go",
 			tpl.RoutesTemplate,
 			WithSubDir(routesPkg),
 			WithData(map[string]any{
@@ -99,10 +99,12 @@ func genSetup() error {
 		routesPkg := path.Join("routes", subDir)
 		routesBase := path.Base(routesPkg)
 
+		name := cases.Title(language.English, cases.NoLower).String(group.GetAnnotation(groupProperty))
 		routes = append(routes, map[string]string{
-			"pkg":  routesPkg,
-			"base": routesBase,
-			"name": cases.Title(language.English, cases.NoLower).String(group.GetAnnotation(groupProperty)),
+			"pkg":   routesPkg,
+			"base":  routesBase,
+			"name":  name,
+			"alias": strings.ToLower(string(name[0])) + name[1:],
 		})
 
 	}

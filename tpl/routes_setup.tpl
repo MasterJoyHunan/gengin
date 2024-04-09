@@ -3,7 +3,7 @@ package routes
 
 import (
     {{- range .routes}}
-    {{if not (eq .pkg "routes")}}"{{$.rootPkg}}/{{.pkg}}"{{end}}
+    {{if not (eq .pkg "routes")}}{{.alias}} "{{$.rootPkg}}/{{.pkg}}"{{end}}
     {{- end}}
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +11,6 @@ import (
 
 func Setup(e *gin.Engine) {
     {{- range .routes}}
-    {{if not (eq .base "routes")}}{{.base}}.{{end}}Register{{.name}}Route(e)
+    {{if not (eq .base "routes")}}{{.alias}}.{{end}}Register{{.name}}Route(e)
     {{- end}}
 }
