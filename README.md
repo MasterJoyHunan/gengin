@@ -36,26 +36,13 @@ gengin 基于 go-zero 开发，是一个 go-zero 的插件，只需定义 .api �
 
 #### 安装
 
-前提是安装了go-zero，如果没有安装，则进行安装
-
-go 1.16 以下使用
-```sh
-go get -u github.com/zeromicro/go-zero/tools/goctl
-```
-go 1.16 及以上使用
-```sh
-go install github.com/zeromicro/go-zero/tools/goctl@v1.3.9
-```
-
-再安装本项目，作为 go-zero 的插件
-
 go 1.16 以下使用
 ```sh
 go get -u github.com/MasterJoyHunan/gengin
 ```
 go 1.16 及以上使用
 ```sh
-go install github.com/MasterJoyHunan/gengin@v1.6.4
+go install github.com/MasterJoyHunan/gengin@v1.7.0
 ```
 
 #### 初始化一个 GO 项目
@@ -117,10 +104,8 @@ service someapp {
 
 #### 在项目下生成 gin 项目
 
-[go-zero 插件使用教程](https://go-zero.dev/cn/docs/goctl/plugin)
-
 ```sh
-goctl api plugin -p gengin -api xxx.api -dir .
+gengin xxx.api
 ```
 
 #### 生成的目录结构如下
@@ -157,7 +142,6 @@ you-app.go        # 如果文件已存在，不会重新生成
 
 ### 注意事项
 
-* request 和 response 不支持数组格式
 * get 和 post 请求都是使用 from 接受参数.
 * 在 api 文件中定义 tag 为 path 的 tag 会转换为 uri，方便 gin 框架处理
 * 在 api 文件中定义 @server 下的 jwt 会自动转换为一个 middleware，需要手动选择自己的熟悉 jwt 框架自行处理

@@ -26,7 +26,7 @@ func GenRoutes() error {
 		routesPkg := path.Join("routes", subDir)
 		routesBase := path.Base(routesPkg)
 
-		os.Remove(path.Join(prepare.OutputDir, routesPkg, "route.go"))
+		os.Remove(path.Join(prepare.OutputDir, routesPkg, "routes.go"))
 
 		// handle
 		handlePkg := path.Join("handler", subDir)
