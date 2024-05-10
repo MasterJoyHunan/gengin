@@ -101,10 +101,15 @@ func genSetup() error {
 
 		name := cases.Title(language.English, cases.NoLower).String(group.GetAnnotation(groupProperty))
 		routes = append(routes, map[string]string{
-			"pkg":   routesPkg,
-			"base":  routesBase,
-			"name":  name,
-			"alias": strings.ToLower(string(name[0])) + name[1:],
+			"pkg":  routesPkg,
+			"base": routesBase,
+			"name": name,
+			"alias": func() string {
+				if len(name) == 0 {
+					return ""
+				}
+				return strings.ToLower(string(name[0])) + name[1:]
+			}(),
 		})
 
 	}
