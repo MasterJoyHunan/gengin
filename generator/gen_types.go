@@ -16,6 +16,8 @@ import (
 
 const labelName = "label"
 
+var hasFileMember = false
+
 var requestTypes map[string]any
 
 func GenTypes() error {
@@ -33,7 +35,8 @@ func GenTypes() error {
 		tpl.TypesTemplate,
 		WithSubDir("types"),
 		WithData(map[string]any{
-			"types": types,
+			"types":   types,
+			"hasFile": hasFileMember,
 		}),
 	)
 	if err != nil {
@@ -87,22 +90,38 @@ func writeType(writer io.Writer, tp spec.Type) error {
 
 		tag := OverrideTag(tp, member)
 
-		if err := writeProperty(writer, member.Name, tag, member.GetComment(), member.Type); err != nil {
+		if err := writeProperty(writer, member.Name, tag, member.GetComment(), member.Type, member.Tags()); err != nil {
 			return err
 		}
 	}
+
 	fmt.Fprintf(writer, "}")
 	return nil
 }
 
-func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type) error {
+func writeProperty(writer io.Writer, name, tag, comment string, tp spec.Type, tags []*spec.Tag) error {
 	var err error
+	tpName := tp.Name()
+
+	hasFileTag := false
+	for _, v := range tags {
+		if v.Key == "file" {
+			hasFileTag = true
+			hasFileMember = true
+			break
+		}
+	}
+
+	if hasFileTag {
+		tpName = "*multipart.FileHeader"
+	}
+
 	if len(comment) > 0 {
 		comment = strings.TrimPrefix(comment, "//")
 		comment = "//" + comment
-		_, err = fmt.Fprintf(writer, "%s %s %s %s\n", util.Title(name), tp.Name(), tag, comment)
+		_, err = fmt.Fprintf(writer, "%s %s %s %s\n", util.Title(name), tpName, tag, comment)
 	} else {
-		_, err = fmt.Fprintf(writer, "%s %s %s\n", util.Title(name), tp.Name(), tag)
+		_, err = fmt.Fprintf(writer, "%s %s %s\n", util.Title(name), tpName, tag)
 	}
 	return err
 }
